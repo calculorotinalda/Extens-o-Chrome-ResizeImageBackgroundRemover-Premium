@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - Smart Image Editor</title>
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+      overflow: auto;
+    }
+    
+    .ob-container {
+      max-width: 960px;
+      width: 90%;
+      height: 600px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    }
+
+    .ob-illustration-side {
+      flex: 1.2;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%), #0b0f19;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 40px;
+    }
+
+    .ob-content-side {
+      flex: 1;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    .slide-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-secondary);
+    }
+
+    .slide-title {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-desc {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .indicator-container {
+      display: flex;
+      gap: 8px;
+    }
+
+    .indicator-dot {
+      width: 20px;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      transition: background-color 0.3s;
+    }
+
+    .indicator-dot.active {
+      background-color: var(--color-primary);
+    }
+
+    /* Onboarding Visual Illustrations */
+    .ob-mock-box {
+      width: 320px;
+      height: 320px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+
+    /* Slide 1 visual: resizer crop shape with gradient product */
+    .ob-vis-1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-sphere {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+      position: relative;
+    }
+    .crop-outline {
+      position: absolute;
+      border: 2px dashed rgba(255,255,255,0.3);
+      width: 180px;
+      height: 180px;
+    }
+
+    /* Slide 2: Interactive Before After Slider */
+    .ob-vis-2 {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Slide 3: Gallery item Grid */
+    .ob-vis-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 24px;
+      width: 100%;
+      height: 100%;
+    }
+    .grid-cell {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .benefit-icon {
+      color: var(--color-success);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="ob-container">
+    
+    <!-- Left Illustration Pane -->
+    <div class="ob-illustration-side">
+      <div class="ob-mock-box ob-vis-1" id="vis-pane-1">
+        <div class="crop-outline"></div>
+        <div class="product-sphere"></div>
+      </div>
+
+      <div class="ob-mock-box ob-vis-2" id="vis-pane-2" style="display: none;">
+        <div class="comparison-slider" style="width: 100%; height:100%;">
+          <div class="comparison-before" id="ob-slider-before" style="width: 50%; background: linear-gradient(135deg, #1e293b, #0f172a);">
+            <div style="padding: 20px; color:rgba(255,255,255,0.2); font-weight:700;">BEFORE</div>
+          </div>
+          <div style="width: 100%; height:100%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display:flex; align-items:center; justify-content:center;">
+            <div style="color:rgba(255,255,255,0.7); font-weight:700;">AFTER (Isolated)</div>
+          </div>
+          <div class="comparison-handle" id="ob-slider-handle">
+            <div class="handle-button">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12h14M5 12l4-4m-4 4l4 4M19 12l-4-4m4 4l-4 4"></path></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-mock-box ob-vis-3" id="vis-pane-3" style="display: none;">
+        <div class="grid-cell" style="background: linear-gradient(135deg, #f3f4f6, #d1d5db); color:#1f2937;">Marble Vibe</div>
+        <div class="grid-cell" style="background: linear-gradient(135deg, #1e293b, #0f172a);">Dark Studio</div>
+        <div class="grid-cell" style="background: linear-gradient(135deg, #78350f, #451a03);">Cozy Wood</div>
+        <div class="grid-cell" style="background: linear-gradient(135deg, #ecfdf5, #a7f3d0); color:#065f46;">Sunlit Forest</div>
+      </div>
+
+      <div class="ob-mock-box ob-vis-1" id="vis-pane-4" style="display: none;">
+        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--color-secondary); filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.4));"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+      </div>
+    </div>
+
+    <!-- Right Slide Info & Action Panel -->
+    <div class="ob-content-side">
+      <!-- 4 Slides -->
+      <div class="slide active" id="slide-1">
+        <span class="slide-num">Step 1 of 4</span>
+        <h2 class="slide-title">Transforme qualquer imagem em segundos</h2>
+        <p class="slide-desc">Redimensione, remova fundos e crie imagens profissionais com IA. Otimizado para e-commerce, marketplaces e marketing digital.</p>
+      </div>
+
+      <div class="slide" id="slide-2">
+        <span class="slide-num">Step 2 of 4</span>
+        <h2 class="slide-title">Remoção Inteligente de Fundo</h2>
+        <p class="slide-desc">Obtenha recortes perfeitamente transparentes em apenas um clique. Nossa inteligência artificial identifica e isola objetos e produtos instantaneamente.</p>
+      </div>
+
+      <div class="slide" id="slide-3">
+        <span class="slide-num">Step 3 of 4</span>
+        <h2 class="slide-title">Backgrounds Premium</h2>
+        <p class="slide-desc">Substitua fundos opacos por cenários fotográficos impressionantes. Insira seus produtos em superfícies de mármore, mesas rústicas ou ambientes modernos em segundos.</p>
+      </div>
+
+      <div class="slide" id="slide-4">
+        <span class="slide-num">Step 4 of 4</span>
+        <h2 class="slide-title">Unlock Full AI Studio</h2>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span>Remoção inteligente de fundo</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span>Substituição ilimitada de backgrounds</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span>AI Background prompts & exportação HD</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✓</span>
+            <span>Processamento em lote até 100 imagens</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; display:flex; flex-direction:column; gap:8px;">
+          <input type="text" id="ob-license-key" placeholder="Enter License Key to Activate Premium" style="font-family:monospace; text-align:center;">
+          <button class="btn btn-primary" id="btn-ob-activate">Validate Key</button>
+        </div>
+      </div>
+
+      <!-- Navigation footer controls -->
+      <div style="display:flex; align-items:center; justify-content:between; margin-top:30px; pt-4 border-t border-slate-800">
+        <div class="indicator-container">
+          <div class="indicator-dot active" id="dot-1"></div>
+          <div class="indicator-dot" id="dot-2"></div>
+          <div class="indicator-dot" id="dot-3"></div>
+          <div class="indicator-dot" id="dot-4"></div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-left:auto;">
+          <button class="btn btn-secondary" id="btn-prev" style="display: none;">Anterior</button>
+          <button class="btn btn-primary" id="btn-next">Seguinte</button>
+          <button class="btn btn-gradient-premium" id="btn-finish" style="display: none;">Começar Agora</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="onboarding.js"></script>
+</body>
+</html>

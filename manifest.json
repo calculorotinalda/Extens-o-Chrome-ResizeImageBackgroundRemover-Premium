@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Image Editor & BG Remover Premium",
+  "version": "1.0.0",
+  "description": "Premium Chrome Extension to resize images, remove backgrounds, and generate AI backgrounds automatically.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "extension/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "extension/background.js"
+  },
+  "options_page": "extension/onboarding.html"
+}
