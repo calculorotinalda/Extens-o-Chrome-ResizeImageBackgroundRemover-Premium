@@ -219,10 +219,10 @@ async function getStats(req, res) {
       FROM users WHERE role = 'user'
     `);
 
-    // Calculate revenue estimates: Premium $9.99/mo, Ultimate $19.99/mo
+    // Calculate revenue estimates: Premium $3.99/mo, Ultimate $6.99/mo
     const monthlyRevenue = (
-      (stats.premiumActive || 0) * 9.99 + 
-      (stats.ultimateActive || 0) * 19.99
+      (stats.premiumActive || 0) * 3.99 + 
+      (stats.ultimateActive || 0) * 6.99
     ).toFixed(2);
 
     const auditLogs = await dbAll(`

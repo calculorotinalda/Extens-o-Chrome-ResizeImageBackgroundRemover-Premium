@@ -1,271 +1,343 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "name": "System Administrator",
-      "email": "admin@premiumresize.com",
-      "password_hash": "$2a$10$HpvdGNMFbC31/0qIdUBaGe0UXOI4TVC.OBLJG25BMR83utXB7pgTS",
-      "role": "admin",
-      "plan": "Ultimate",
-      "status": "Active",
-      "created_at": "2026-06-22T21:38:45.398Z"
-    },
-    {
-      "id": 2,
-      "name": "Pedro Gonçalves",
-      "email": "pedro@calculorotina.pt",
-      "role": "user",
-      "plan": "Premium",
-      "status": "Active",
-      "license_key": "PREM-DEFF-7587-6AAF-C085",
-      "expires_at": "2027-06-22",
-      "created_at": "2026-06-22T21:53:06.507Z"
-    },
-    {
-      "id": 2,
-      "name": "Pedro Gonçalves",
-      "email": "pedro@calculorotina.pt",
-      "role": "user",
-      "plan": "Premium",
-      "status": "Active",
-      "license_key": "PREM-DEFF-7587-6AAF-C085",
-      "expires_at": "2027-06-22",
-      "created_at": "2026-06-22T21:53:06.507Z"
-    },
-    {
-      "id": 2,
-      "name": "Pedro Gonçalves",
-      "email": "pedro@calculorotina.pt",
-      "role": "user",
-      "plan": "Premium",
-      "status": "Active",
-      "license_key": "PREM-DEFF-7587-6AAF-C085",
-      "expires_at": "2027-06-22",
-      "created_at": "2026-06-22T21:53:06.507Z"
-    },
-    {
-      "id": 3,
-      "name": "Pedro Gonçalves",
-      "email": "goncalvescalculorotina@gmail.com",
-      "role": "user",
-      "plan": "Premium",
-      "status": "Active",
-      "license_key": "PREM-3663-6AAD-A1B3-CCBC",
-      "expires_at": null,
-      "created_at": "2026-06-23T17:42:07+00:00"
-    },
-    {
-      "id": 6,
-      "name": "calculorotina",
-      "email": "ldacalculorotina@hotmail.com",
-      "role": "user",
-      "plan": "Ultimate",
-      "status": "Active",
-      "license_key": "ULTI-F58B-E0ED-03B1-5482",
-      "expires_at": "2027-06-23",
-      "created_at": "2026-06-23T18:14:16.176Z"
-    }
-  ],
-  "audit_logs": [
-    {
-      "id": 1,
-      "user_id": null,
-      "action": "ADMIN_LOGIN_FAILED",
-      "details": "Failed attempt with email: pedro@calculorotina",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:48:04.167Z"
-    },
-    {
-      "id": 2,
-      "user_id": null,
-      "action": "ADMIN_LOGIN_FAILED",
-      "details": "Failed attempt with email: admin@premiumresize.com (incorrect password)",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:48:29.179Z"
-    },
-    {
-      "id": 3,
-      "user_id": 1,
-      "action": "ADMIN_LOGIN_SUCCESS",
-      "details": "Successful administrator login",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:48:38.016Z"
-    },
-    {
-      "id": 4,
-      "user_id": 1,
-      "action": "LICENSE_CREATED",
-      "details": "Created Premium license key for pedro@calculorotina.pt. Key: PREM-DEFF-7587-6AAF-C085",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:53:06.509Z"
-    },
-    {
-      "id": 5,
-      "user_id": 2,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:53:34.601Z"
-    },
-    {
-      "id": 6,
-      "user_id": 1,
-      "action": "LICENSE_CREATED",
-      "details": "Created Ultimate license key for geral@calculorotina.pt. Key: ULTI-3009-817E-891B-FE4A",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:56:17.345Z"
-    },
-    {
-      "id": 7,
-      "user_id": 2,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:56:34.282Z"
-    },
-    {
-      "id": 8,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:56:54.315Z"
-    },
-    {
-      "id": 9,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:57:37.267Z"
-    },
-    {
-      "id": 10,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-22T21:58:04.249Z"
-    },
-    {
-      "id": 11,
-      "user_id": 3,
-      "action": "LICENSE_CREATED_WOO",
-      "details": "Created Ultimate license key for test-woo-buyer@calculorotina.pt via WooCommerce Order #41. Key: ULTI-B60A-B7D4-D7D8-A80F",
-      "ip_address": "127.0.0.1",
-      "timestamp": "2026-06-23T17:38:43+00:00"
-    },
-    {
-      "id": 12,
-      "user_id": 3,
-      "action": "LICENSE_CREATED_WOO",
-      "details": "Created Premium license key for goncalvescalculorotina@gmail.com via WooCommerce Order #42. Key: PREM-3663-6AAD-A1B3-CCBC",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:42:07+00:00"
-    },
-    {
-      "id": 13,
-      "user_id": null,
-      "action": "LICENSE_VERIFY_FAILED",
-      "details": "Invalid license key verification attempt: ULTI-3009-817E-891B-FE4A",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:45:41.764Z"
-    },
-    {
-      "id": 14,
-      "user_id": null,
-      "action": "LICENSE_VERIFY_FAILED",
-      "details": "Invalid license key verification attempt: ULTI-3009-817E-891B-FE4A",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:46:07.379Z"
-    },
-    {
-      "id": 15,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:46:14.769Z"
-    },
-    {
-      "id": 16,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:47:03.979Z"
-    },
-    {
-      "id": 17,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:48:14.316Z"
-    },
-    {
-      "id": 18,
-      "user_id": 3,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T17:50:14.967Z"
-    },
-    {
-      "id": 19,
-      "user_id": 1,
-      "action": "ADMIN_LOGIN_SUCCESS",
-      "details": "Successful administrator login",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:03:42.393Z"
-    },
-    {
-      "id": 20,
-      "user_id": 1,
-      "action": "LICENSE_CREATED",
-      "details": "Created Ultimate license key for ldacalculorotina@hotmail.com. Key: ULTI-F58B-E0ED-03B1-5482",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:14:16.177Z"
-    },
-    {
-      "id": 21,
-      "user_id": 6,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:21:49.745Z"
-    },
-    {
-      "id": 22,
-      "user_id": 6,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:29:33.939Z"
-    },
-    {
-      "id": 23,
-      "user_id": 6,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:30:15.397Z"
-    },
-    {
-      "id": 24,
-      "user_id": 6,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:30:21.090Z"
-    },
-    {
-      "id": 25,
-      "user_id": 6,
-      "action": "LICENSE_VERIFY_SUCCESS",
-      "details": "Successful license key verification",
-      "ip_address": "::1",
-      "timestamp": "2026-06-23T18:42:29.365Z"
-    }
-  ]
+    "users": [
+        {
+            "id": 1,
+            "name": "System Administrator",
+            "email": "admin@premiumresize.com",
+            "password_hash": "$2a$10$HpvdGNMFbC31/0qIdUBaGe0UXOI4TVC.OBLJG25BMR83utXB7pgTS",
+            "role": "admin",
+            "plan": "Ultimate",
+            "status": "Active",
+            "created_at": "2026-06-22T21:38:45.398Z"
+        },
+        {
+            "id": 2,
+            "name": "Pedro Gon\u00e7alves",
+            "email": "pedro@calculorotina.pt",
+            "role": "user",
+            "plan": "Premium",
+            "status": "Active",
+            "license_key": "PREM-DEFF-7587-6AAF-C085",
+            "expires_at": "2027-06-22",
+            "created_at": "2026-06-22T21:53:06.507Z"
+        },
+        {
+            "id": 2,
+            "name": "Pedro Gon\u00e7alves",
+            "email": "pedro@calculorotina.pt",
+            "role": "user",
+            "plan": "Premium",
+            "status": "Active",
+            "license_key": "PREM-DEFF-7587-6AAF-C085",
+            "expires_at": "2027-06-22",
+            "created_at": "2026-06-22T21:53:06.507Z"
+        },
+        {
+            "id": 2,
+            "name": "Pedro Gon\u00e7alves",
+            "email": "pedro@calculorotina.pt",
+            "role": "user",
+            "plan": "Premium",
+            "status": "Active",
+            "license_key": "PREM-DEFF-7587-6AAF-C085",
+            "expires_at": "2027-06-22",
+            "created_at": "2026-06-22T21:53:06.507Z"
+        },
+        {
+            "id": 3,
+            "name": "Pedro Gon\u00e7alves",
+            "email": "goncalvescalculorotina@gmail.com",
+            "role": "user",
+            "plan": "Premium",
+            "status": "Active",
+            "license_key": "PREM-3663-6AAD-A1B3-CCBC",
+            "expires_at": null,
+            "created_at": "2026-06-23T17:42:07+00:00"
+        },
+        {
+            "id": 6,
+            "name": "calculorotina",
+            "email": "ldacalculorotina@hotmail.com",
+            "role": "user",
+            "plan": "Ultimate",
+            "status": "Active",
+            "license_key": "ULTI-799E-BB66-2688-68FC",
+            "expires_at": "2026-07-24",
+            "created_at": "2026-06-23T18:14:16.176Z"
+        }
+    ],
+    "audit_logs": [
+        {
+            "id": 1,
+            "user_id": null,
+            "action": "ADMIN_LOGIN_FAILED",
+            "details": "Failed attempt with email: pedro@calculorotina",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:48:04.167Z"
+        },
+        {
+            "id": 2,
+            "user_id": null,
+            "action": "ADMIN_LOGIN_FAILED",
+            "details": "Failed attempt with email: admin@premiumresize.com (incorrect password)",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:48:29.179Z"
+        },
+        {
+            "id": 3,
+            "user_id": 1,
+            "action": "ADMIN_LOGIN_SUCCESS",
+            "details": "Successful administrator login",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:48:38.016Z"
+        },
+        {
+            "id": 4,
+            "user_id": 1,
+            "action": "LICENSE_CREATED",
+            "details": "Created Premium license key for pedro@calculorotina.pt. Key: PREM-DEFF-7587-6AAF-C085",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:53:06.509Z"
+        },
+        {
+            "id": 5,
+            "user_id": 2,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:53:34.601Z"
+        },
+        {
+            "id": 6,
+            "user_id": 1,
+            "action": "LICENSE_CREATED",
+            "details": "Created Ultimate license key for geral@calculorotina.pt. Key: ULTI-3009-817E-891B-FE4A",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:56:17.345Z"
+        },
+        {
+            "id": 7,
+            "user_id": 2,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:56:34.282Z"
+        },
+        {
+            "id": 8,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:56:54.315Z"
+        },
+        {
+            "id": 9,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:57:37.267Z"
+        },
+        {
+            "id": 10,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-22T21:58:04.249Z"
+        },
+        {
+            "id": 11,
+            "user_id": 3,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Ultimate license key for test-woo-buyer@calculorotina.pt via WooCommerce Order #41. Key: ULTI-B60A-B7D4-D7D8-A80F",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-23T17:38:43+00:00"
+        },
+        {
+            "id": 12,
+            "user_id": 3,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Premium license key for goncalvescalculorotina@gmail.com via WooCommerce Order #42. Key: PREM-3663-6AAD-A1B3-CCBC",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:42:07+00:00"
+        },
+        {
+            "id": 13,
+            "user_id": null,
+            "action": "LICENSE_VERIFY_FAILED",
+            "details": "Invalid license key verification attempt: ULTI-3009-817E-891B-FE4A",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:45:41.764Z"
+        },
+        {
+            "id": 14,
+            "user_id": null,
+            "action": "LICENSE_VERIFY_FAILED",
+            "details": "Invalid license key verification attempt: ULTI-3009-817E-891B-FE4A",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:46:07.379Z"
+        },
+        {
+            "id": 15,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:46:14.769Z"
+        },
+        {
+            "id": 16,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:47:03.979Z"
+        },
+        {
+            "id": 17,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:48:14.316Z"
+        },
+        {
+            "id": 18,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T17:50:14.967Z"
+        },
+        {
+            "id": 19,
+            "user_id": 1,
+            "action": "ADMIN_LOGIN_SUCCESS",
+            "details": "Successful administrator login",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:03:42.393Z"
+        },
+        {
+            "id": 20,
+            "user_id": 1,
+            "action": "LICENSE_CREATED",
+            "details": "Created Ultimate license key for ldacalculorotina@hotmail.com. Key: ULTI-F58B-E0ED-03B1-5482",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:14:16.177Z"
+        },
+        {
+            "id": 21,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:21:49.745Z"
+        },
+        {
+            "id": 22,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:29:33.939Z"
+        },
+        {
+            "id": 23,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:30:15.397Z"
+        },
+        {
+            "id": 24,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:30:21.090Z"
+        },
+        {
+            "id": 25,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-23T18:42:29.365Z"
+        },
+        {
+            "id": 26,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-24T13:33:04+00:00"
+        },
+        {
+            "id": 27,
+            "user_id": 1,
+            "action": "ADMIN_LOGIN_SUCCESS",
+            "details": "Successful administrator login",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-24T13:33:13+00:00"
+        },
+        {
+            "id": 28,
+            "user_id": 7,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Premium license key for  via WooCommerce Order #45. Key: PREM-7D09-06CF-EC5E-C4F9",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T13:33:29+00:00"
+        },
+        {
+            "id": 29,
+            "user_id": 7,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Premium license key for woo-test-buyer@calculorotina.pt via WooCommerce Order #46. Key: PREM-9E39-4C13-F245-54A5",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T13:33:37+00:00"
+        },
+        {
+            "id": 30,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T13:34:11.397Z"
+        },
+        {
+            "id": 31,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T14:15:07.318Z"
+        },
+        {
+            "id": 32,
+            "user_id": 6,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T14:15:11.295Z"
+        },
+        {
+            "id": 33,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-24T14:16:18+00:00"
+        },
+        {
+            "id": 34,
+            "user_id": 6,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Ultimate license key for ldacalculorotina@hotmail.com via WooCommerce Order #58. Key: ULTI-799E-BB66-2688-68FC",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T14:23:46+00:00"
+        }
+    ]
 }
