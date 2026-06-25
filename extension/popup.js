@@ -3,7 +3,7 @@
 // 1. STATE & SYSTEM CONFIG
 let currentPlan = 'Free';
 let activeLicense = null;
-let apiHost = 'http://resizeimagebackgroundremover.local';
+let apiHost = 'https://resizeimagebackgroundremover.alwaysdata.net';
 let recentEdits = [];
 
 // Image Files Cache

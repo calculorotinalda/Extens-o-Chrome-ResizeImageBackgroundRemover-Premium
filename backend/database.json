@@ -48,9 +48,9 @@
             "name": "Pedro Gon\u00e7alves",
             "email": "goncalvescalculorotina@gmail.com",
             "role": "user",
-            "plan": "Premium",
+            "plan": "Ultimate",
             "status": "Active",
-            "license_key": "PREM-3663-6AAD-A1B3-CCBC",
+            "license_key": "ULTI-0094-8F10-4A2F-69A1",
             "expires_at": null,
             "created_at": "2026-06-23T17:42:07+00:00"
         },
@@ -64,6 +64,17 @@
             "license_key": "ULTI-799E-BB66-2688-68FC",
             "expires_at": "2026-07-24",
             "created_at": "2026-06-23T18:14:16.176Z"
+        },
+        {
+            "id": 7,
+            "name": "Pedro Gon\u00e7alves",
+            "email": "pedro___miguel@hotmail.com",
+            "role": "user",
+            "plan": "Ultimate",
+            "status": "Active",
+            "license_key": "ULTI-278A-735D-E5DD-F26A",
+            "expires_at": null,
+            "created_at": "2026-06-24T19:07:54+00:00"
         }
     ],
     "audit_logs": [
@@ -338,6 +349,30 @@
             "details": "Created Ultimate license key for ldacalculorotina@hotmail.com via WooCommerce Order #58. Key: ULTI-799E-BB66-2688-68FC",
             "ip_address": "::1",
             "timestamp": "2026-06-24T14:23:46+00:00"
+        },
+        {
+            "id": 35,
+            "user_id": 3,
+            "action": "LICENSE_CREATED_WOO",
+            "details": "Created Ultimate license key for goncalvescalculorotina@gmail.com via WooCommerce Order #60. Key: ULTI-0094-8F10-4A2F-69A1",
+            "ip_address": "::1",
+            "timestamp": "2026-06-24T14:26:37+00:00"
+        },
+        {
+            "id": 36,
+            "user_id": 3,
+            "action": "LICENSE_VERIFY_SUCCESS",
+            "details": "Successful license key verification",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-24T14:27:04+00:00"
+        },
+        {
+            "id": 37,
+            "user_id": 1,
+            "action": "LICENSE_CREATED",
+            "details": "Created Ultimate license key for pedro___miguel@hotmail.com. Key: ULTI-278A-735D-E5DD-F26A",
+            "ip_address": "127.0.0.1",
+            "timestamp": "2026-06-24T19:07:54+00:00"
         }
     ]
 }

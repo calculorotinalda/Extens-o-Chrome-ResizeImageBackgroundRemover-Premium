@@ -2,7 +2,7 @@
 
 let currentSlide = 1;
 const totalSlides = 4;
-let apiHost = 'http://resizeimagebackgroundremover.local';
+let apiHost = 'https://resizeimagebackgroundremover.alwaysdata.net';
 
 document.addEventListener('DOMContentLoaded', () => {
   initSlideshow();
