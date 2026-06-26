@@ -79,9 +79,42 @@ function initNavigation() {
   });
 
   // Upgrade button on dashboard redirects to external pricing website
-  document.getElementById('dash-upgrade-btn').addEventListener('click', () => {
-    window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
-  });
+  const dashUpgradeBtn = document.getElementById('dash-upgrade-btn');
+  if (dashUpgradeBtn) {
+    dashUpgradeBtn.addEventListener('click', () => {
+      window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
+    });
+  }
+
+  // Locked overlay buttons (removing inline onclick handlers due to Chrome Extension CSP)
+  const btnUnlockRemoveBg = document.getElementById('btn-unlock-remove-bg');
+  if (btnUnlockRemoveBg) {
+    btnUnlockRemoveBg.addEventListener('click', () => {
+      const navAccount = document.getElementById('nav-account');
+      if (navAccount) navAccount.click();
+    });
+  }
+
+  const btnUnlockChangeBg = document.getElementById('btn-unlock-change-bg');
+  if (btnUnlockChangeBg) {
+    btnUnlockChangeBg.addEventListener('click', () => {
+      window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
+    });
+  }
+
+  const btnUnlockAiStudio = document.getElementById('btn-unlock-ai-studio');
+  if (btnUnlockAiStudio) {
+    btnUnlockAiStudio.addEventListener('click', () => {
+      window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
+    });
+  }
+
+  const btnUnlockBatch = document.getElementById('btn-unlock-batch');
+  if (btnUnlockBatch) {
+    btnUnlockBatch.addEventListener('click', () => {
+      window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
+    });
+  }
 }
 
 // 3. LICENSING & SUBSCRIPTION SYSTEM
