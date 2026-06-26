@@ -80,7 +80,7 @@ function initNavigation() {
 
   // Upgrade button on dashboard redirects to external pricing website
   document.getElementById('dash-upgrade-btn').addEventListener('click', () => {
-    window.open('http://resizeimagebackgroundremover.local/#pricing', '_blank');
+    window.open('https://resizeimagebackgroundremover.alwaysdata.net/#pricing', '_blank');
   });
 }
 
