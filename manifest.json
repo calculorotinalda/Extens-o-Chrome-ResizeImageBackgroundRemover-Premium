@@ -23,5 +23,5 @@
   "background": {
     "service_worker": "extension/background.js"
   },
-  "options_page": "extension/onboarding.html"
+  "options_page": "extension/popup.html"
 }
