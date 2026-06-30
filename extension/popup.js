@@ -5,32 +5,34 @@ let currentPlan = 'Free';
 let activeLicense = null;
 let apiHost = 'https://resizeimagebackgroundremover.alwaysdata.net';
 let recentEdits = [];
+let geminiApiKey = '';
 
 // Image Files Cache
 let resizeFile = null;
 let removeBgFile = null;
 let changeBgSubject = null;
 let changeBgTemplate = null;
+let changeBgCustomTemplateImage = null; // Custom uploaded background image
 let aiGeneratedBg = null;
 let batchFiles = [];
 let batchProcessedZipData = null;
 
-// Preset Background Templates (Color Gradients / Designs)
+// Preset Background Templates (Curated Royalty-Free Premium Unsplash Images)
 const bgTemplates = [
-  { id: 'marble', name: 'Luxury Marble', gStart: '#f3f4f6', gEnd: '#d1d5db', type: 'pattern' },
-  { id: 'dark-studio', name: 'Dark Studio', gStart: '#1e293b', gEnd: '#0f172a', type: 'gradient' },
-  { id: 'cozy-wood', name: 'Rustic Store', gStart: '#78350f', gEnd: '#451a03', type: 'gradient' },
-  { id: 'neon-tech', name: 'Tech Neon', gStart: '#0c0a09', gEnd: '#1e1b4b', type: 'pattern' },
-  { id: 'gold-lux', name: 'Luxury Gold', gStart: '#fef08a', gEnd: '#ca8a04', type: 'gradient' },
-  { id: 'nature-leaf', name: 'Sunlit Forest', gStart: '#ecfdf5', gEnd: '#a7f3d0', type: 'gradient' },
-  { id: 'minimal-white', name: 'Clean White', gStart: '#ffffff', gEnd: '#e2e8f0', type: 'gradient' },
-  { id: 'soft-pink', name: 'Cosmetic Pink', gStart: '#fdf2f8', gEnd: '#fbcfe8', type: 'gradient' }
+  { id: 'marble', name: 'Luxury Marble', imgUrl: 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=800&auto=format&fit=crop', gStart: '#f3f4f6', gEnd: '#d1d5db', type: 'pattern' },
+  { id: 'dark-studio', name: 'Dark Studio', imgUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&auto=format&fit=crop', gStart: '#1e293b', gEnd: '#0f172a', type: 'gradient' },
+  { id: 'cozy-wood', name: 'Rustic Store', imgUrl: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&auto=format&fit=crop', gStart: '#78350f', gEnd: '#451a03', type: 'gradient' },
+  { id: 'neon-tech', name: 'Tech Neon', imgUrl: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&auto=format&fit=crop', gStart: '#0c0a09', gEnd: '#1e1b4b', type: 'pattern' },
+  { id: 'gold-lux', name: 'Luxury Gold', imgUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop', gStart: '#fef08a', gEnd: '#ca8a04', type: 'gradient' },
+  { id: 'nature-leaf', name: 'Sunlit Forest', imgUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop', gStart: '#ecfdf5', gEnd: '#a7f3d0', type: 'gradient' },
+  { id: 'minimal-white', name: 'Clean White', imgUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop', gStart: '#ffffff', gEnd: '#e2e8f0', type: 'gradient' },
+  { id: 'soft-pink', name: 'Cosmetic Pink', imgUrl: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&auto=format&fit=crop', gStart: '#fdf2f8', gEnd: '#fbcfe8', type: 'gradient' }
 ];
 
 // Initialize Extension Popup
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
-  initLicenseSystem();
+  initSettingsPanel();
   initResizePanel();
   initRemoveBgPanel();
   initReplaceBgPanel();
@@ -54,7 +56,7 @@ function initNavigation() {
     'panel-change-bg': { title: 'Background Replacer', sub: 'Place isolated subjects in studio templates' },
     'panel-ai-studio': { title: 'AI Background Studio', sub: 'Describe and generate personalized backdrops' },
     'panel-batch': { title: 'Batch Queue Processor', sub: 'Upload up to 100 images for automated processing' },
-    'panel-account': { title: 'Licensing & Activation', sub: 'Connect keys to unlock premium SaaS features' }
+    'panel-settings': { title: 'Configurações & Licença', sub: 'Gerencie temas, chaves de API e status de subscrição' }
   };
 
   navItems.forEach(item => {
@@ -90,8 +92,8 @@ function initNavigation() {
   const btnUnlockRemoveBg = document.getElementById('btn-unlock-remove-bg');
   if (btnUnlockRemoveBg) {
     btnUnlockRemoveBg.addEventListener('click', () => {
-      const navAccount = document.getElementById('nav-account');
-      if (navAccount) navAccount.click();
+      const navSettings = document.getElementById('nav-settings');
+      if (navSettings) navSettings.click();
     });
   }
 
@@ -117,8 +119,8 @@ function initNavigation() {
   }
 }
 
-// 3. LICENSING & SUBSCRIPTION SYSTEM
-function initLicenseSystem() {
+// 3. SETTINGS & ACCOUNT SYSTEM
+function initSettingsPanel() {
   const licenseKeyInput = document.getElementById('license-key-input');
   const licenseHostInput = document.getElementById('license-host-input');
   const btnActivate = document.getElementById('btn-license-activate');
@@ -140,13 +142,19 @@ function initLicenseSystem() {
         verifyKeyOnline(result.licenseKey);
       }
     });
+  } else {
+    const savedKey = localStorage.getItem('licenseKey');
+    if (savedKey) {
+      licenseKeyInput.value = savedKey;
+      verifyKeyOnline(savedKey);
+    }
   }
 
   btnActivate.addEventListener('click', () => {
     const key = licenseKeyInput.value.trim();
     const host = licenseHostInput.value.trim();
     if (!key) {
-      alert('Please enter a license key');
+      alert('Por favor, introduza uma chave de licença');
       return;
     }
     if (host) {
@@ -157,7 +165,7 @@ function initLicenseSystem() {
 
   async function verifyKeyOnline(key) {
     btnActivate.disabled = true;
-    btnActivate.textContent = 'Verifying license online...';
+    btnActivate.textContent = 'A verificar licença online...';
     try {
       const response = await fetch(`${apiHost}/api/license/verify`, {
         method: 'POST',
@@ -167,7 +175,7 @@ function initLicenseSystem() {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || 'Verification failed');
+        throw new Error(data.error || 'Verificação falhou');
       }
 
       // Success
@@ -177,6 +185,9 @@ function initLicenseSystem() {
       // Save locally
       if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
         chrome.storage.local.set({ licenseKey: key, licenseData: data, licenseHost: apiHost });
+      } else {
+        localStorage.setItem('licenseKey', key);
+        localStorage.setItem('licenseData', JSON.stringify(data));
       }
 
       updateUIForPlan();
@@ -188,20 +199,116 @@ function initLicenseSystem() {
       expiresEl.textContent = data.expiresAt ? data.expiresAt : 'Never (Lifetime)';
       infoCard.style.display = 'block';
 
-      alert(`Success! ${data.plan} license key activated.`);
+      alert(`Sucesso! Licença ${data.plan} ativada.`);
     } catch (err) {
       console.error(err);
-      alert(`Licensing Error: ${err.message}. Defaulting to Free plan.`);
+      alert(`Erro de Licença: ${err.message}. A usar plano gratuito.`);
       currentPlan = 'Free';
       activeLicense = null;
       updateUIForPlan();
       infoCard.style.display = 'none';
     } finally {
       btnActivate.disabled = false;
-      btnActivate.textContent = 'Verify and Activate Key';
+      btnActivate.textContent = 'Verificar e Ativar Licença';
     }
   }
+
+  // --- THEME SWITCHER LOGIC ---
+  const btnThemeDark = document.getElementById('btn-theme-dark');
+  const btnThemeLight = document.getElementById('btn-theme-light');
+
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      document.body.classList.add('theme-light');
+      btnThemeLight.classList.add('btn-primary');
+      btnThemeLight.classList.remove('btn-secondary');
+      btnThemeDark.classList.add('btn-secondary');
+      btnThemeDark.classList.remove('btn-primary');
+    } else {
+      document.body.classList.remove('theme-light');
+      btnThemeDark.classList.add('btn-primary');
+      btnThemeDark.classList.remove('btn-secondary');
+      btnThemeLight.classList.add('btn-secondary');
+      btnThemeLight.classList.remove('btn-primary');
+    }
+  }
+
+  // Load saved theme
+  let savedTheme = 'dark';
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get(['theme'], (result) => {
+      if (result.theme) {
+        savedTheme = result.theme;
+        applyTheme(savedTheme);
+      }
+    });
+  } else {
+    savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+  }
+
+  btnThemeDark.addEventListener('click', () => {
+    applyTheme('dark');
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ theme: 'dark' });
+    } else {
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  btnThemeLight.addEventListener('click', () => {
+    applyTheme('light');
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ theme: 'light' });
+    } else {
+      localStorage.setItem('theme', 'light');
+    }
+  });
+
+  // --- GEMINI API KEY LOGIC ---
+  const geminiInput = document.getElementById('gemini-api-key-input');
+  const btnToggleGemini = document.getElementById('btn-toggle-gemini-key');
+  const btnSaveGemini = document.getElementById('btn-save-gemini-key');
+
+  // Load saved Gemini key
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get(['geminiApiKey'], (result) => {
+      if (result.geminiApiKey) {
+        geminiApiKey = result.geminiApiKey;
+        geminiInput.value = geminiApiKey;
+      }
+    });
+  } else {
+    geminiApiKey = localStorage.getItem('geminiApiKey') || '';
+    geminiInput.value = geminiApiKey;
+  }
+
+  // Toggle show/hide
+  btnToggleGemini.addEventListener('click', () => {
+    if (geminiInput.type === 'password') {
+      geminiInput.type = 'text';
+      btnToggleGemini.textContent = '🔒';
+    } else {
+      geminiInput.type = 'password';
+      btnToggleGemini.textContent = '👁️';
+    }
+  });
+
+  // Save key
+  btnSaveGemini.addEventListener('click', () => {
+    const key = geminiInput.value.trim();
+    geminiApiKey = key;
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ geminiApiKey: key }, () => {
+        alert('Chave API do Gemini guardada com sucesso!');
+      });
+    } else {
+      localStorage.setItem('geminiApiKey', key);
+      alert('Chave API do Gemini guardada com sucesso!');
+    }
+  });
 }
+
 
 function updateUIForPlan() {
   const badge = document.getElementById('status-plan-badge');
@@ -254,10 +361,14 @@ function initResizePanel() {
   const formatSelect = document.getElementById('resize-format-select');
   const qualityInput = document.getElementById('resize-quality');
   const qualityVal = document.getElementById('resize-quality-val');
+  const btnResizeNow = document.getElementById('btn-resize-now');
   const btnProcess = document.getElementById('btn-resize-process');
   const previewBox = document.getElementById('resize-preview-box');
   const previewImg = document.getElementById('resize-preview-img');
   const emptyPreview = document.getElementById('resize-empty-preview');
+
+  let resizeOriginalSrc = null;
+  let resizedDataUrl = null;
 
   // Trigger File Input Click
   dropzone.addEventListener('click', () => fileInput.click());
@@ -293,19 +404,27 @@ function initResizePanel() {
       widthInput.value = w;
       heightInput.value = h;
     }
+    // Hide download button when parameters change, forcing re-resize
+    btnProcess.style.display = 'none';
   });
 
+  widthInput.addEventListener('input', () => btnProcess.style.display = 'none');
+  heightInput.addEventListener('input', () => btnProcess.style.display = 'none');
+  formatSelect.addEventListener('change', () => btnProcess.style.display = 'none');
   qualityInput.addEventListener('input', () => {
     qualityVal.textContent = `${qualityInput.value}%`;
+    btnProcess.style.display = 'none';
   });
 
   function loadResizeImage(file) {
     resizeFile = file;
     const reader = new FileReader();
     reader.onload = (e) => {
+      resizeOriginalSrc = e.target.result;
       previewImg.src = e.target.result;
       previewBox.style.display = 'block';
       emptyPreview.style.display = 'none';
+      btnProcess.style.display = 'none';
       
       // Auto-populate dimensions from image
       const img = new Image();
@@ -320,9 +439,9 @@ function initResizePanel() {
     reader.readAsDataURL(file);
   }
 
-  btnProcess.addEventListener('click', () => {
-    if (!resizeFile) {
-      alert('Please upload an image first');
+  btnResizeNow.addEventListener('click', () => {
+    if (!resizeFile || !resizeOriginalSrc) {
+      alert('Por favor, faça o upload de uma imagem primeiro');
       return;
     }
 
@@ -331,6 +450,10 @@ function initResizePanel() {
     const format = formatSelect.value;
     const q = parseFloat(qualityInput.value) / 100;
 
+    btnResizeNow.disabled = true;
+    btnResizeNow.textContent = 'A redimensionar...';
+
+    // Perform live resize draw on canvas
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -341,12 +464,29 @@ function initResizePanel() {
       
       const mime = format;
       const extension = format.split('/')[1] || 'png';
-      const dataUrl = canvas.toDataURL(mime, q);
+      resizedDataUrl = canvas.toDataURL(mime, q);
 
-      triggerDownload(dataUrl, `resized-${w}x${h}.${extension}`);
-      saveEditsHistory('Resize', `Resized to ${w}x${h}`, dataUrl);
+      // Update Live Preview
+      previewImg.src = resizedDataUrl;
+      btnProcess.style.display = 'block';
+      btnResizeNow.disabled = false;
+      btnResizeNow.textContent = 'Resize Image';
     };
-    img.src = previewImg.src;
+    img.src = resizeOriginalSrc;
+  });
+
+  btnProcess.addEventListener('click', () => {
+    if (!resizedDataUrl) {
+      alert('Por favor, clique em "Resize Image" primeiro');
+      return;
+    }
+    const w = parseInt(widthInput.value) || 800;
+    const h = parseInt(heightInput.value) || 800;
+    const format = formatSelect.value;
+    const extension = format.split('/')[1] || 'png';
+
+    triggerDownload(resizedDataUrl, `resized-${w}x${h}.${extension}`);
+    saveEditsHistory('Resize', `Resized to ${w}x${h}`, resizedDataUrl);
   });
 }
 
@@ -513,6 +653,9 @@ function initReplaceBgPanel() {
   const emptyPreview = document.getElementById('bg-empty-preview');
   const btnDownload = document.getElementById('btn-bg-download');
 
+  const btnUploadCustomBg = document.getElementById('btn-upload-custom-bg');
+  const customBgInput = document.getElementById('bg-custom-file-input');
+
   // Adjustments
   const brightRange = document.getElementById('bg-brightness');
   const brightVal = document.getElementById('bg-brightness-val');
@@ -521,14 +664,23 @@ function initReplaceBgPanel() {
   const blurRange = document.getElementById('bg-blur');
   const blurVal = document.getElementById('bg-blur-val');
 
+  let cachedBgImage = null;
+  let cachedBgImageUrl = null;
+
+  // Load first template on startup as default
+  changeBgTemplate = bgTemplates[0];
+  loadBgTemplateImage(changeBgTemplate);
+
   // Render backdrops library
   bgTemplates.forEach((tpl) => {
     const item = document.createElement('div');
     item.className = 'preset-item';
     item.setAttribute('data-id', tpl.id);
     
-    // Create preview background using CSS gradients
-    item.style.background = `linear-gradient(135deg, ${tpl.gStart}, ${tpl.gEnd})`;
+    // Create preview background using Unsplash template images
+    item.style.backgroundImage = `url(${tpl.imgUrl})`;
+    item.style.backgroundSize = 'cover';
+    item.style.backgroundPosition = 'center';
     
     const label = document.createElement('div');
     label.className = 'preset-label';
@@ -541,8 +693,55 @@ function initReplaceBgPanel() {
       document.querySelectorAll('.preset-item').forEach(p => p.classList.remove('active'));
       item.classList.add('active');
       changeBgTemplate = tpl;
-      renderComposite();
+      changeBgCustomTemplateImage = null; // Clear custom background
+      loadBgTemplateImage(tpl);
     });
+  });
+
+  // Set the first template as active visually
+  setTimeout(() => {
+    const firstItem = presetGrid.querySelector('.preset-item');
+    if (firstItem) firstItem.classList.add('active');
+  }, 200);
+
+  function loadBgTemplateImage(tpl) {
+    if (tpl.imgUrl) {
+      if (cachedBgImageUrl !== tpl.imgUrl) {
+        cachedBgImageUrl = tpl.imgUrl;
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // Essential to prevent tainted canvas SecurityError
+        img.onload = () => {
+          cachedBgImage = img;
+          renderComposite();
+        };
+        img.src = tpl.imgUrl;
+      } else {
+        renderComposite();
+      }
+    }
+  }
+
+  btnUploadCustomBg.addEventListener('click', () => customBgInput.click());
+  customBgInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        changeBgCustomTemplateImage = event.target.result;
+        
+        // Load custom background image
+        const img = new Image();
+        img.onload = () => {
+          cachedBgImage = img;
+          cachedBgImageUrl = null; // Clear URL cache
+          // Deactivate selected templates visually
+          document.querySelectorAll('.preset-item').forEach(p => p.classList.remove('active'));
+          renderComposite();
+        };
+        img.src = changeBgCustomTemplateImage;
+      };
+      reader.readAsDataURL(file);
+    }
   });
 
   dropzone.addEventListener('click', () => fileInput.click());
@@ -597,25 +796,21 @@ function initReplaceBgPanel() {
         ctx.filter = `blur(${blurRange.value}px)`;
       }
       
-      const tpl = changeBgTemplate || bgTemplates[0];
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, tpl.gStart);
-      gradient.addColorStop(1, tpl.gEnd);
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw simulated marble texture details if marble selected
-      if (tpl.id === 'marble') {
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.04)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 100);
-        ctx.bezierCurveTo(200, 300, 400, 100, 600, 400);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(100, 0);
-        ctx.bezierCurveTo(300, 400, 150, 500, 500, 600);
-        ctx.stroke();
+      if (cachedBgImage && cachedBgImage.complete) {
+        // Draw image stretched to cover the canvas (cover effect)
+        const scale = Math.max(canvas.width / cachedBgImage.width, canvas.height / cachedBgImage.height);
+        const w = cachedBgImage.width * scale;
+        const h = cachedBgImage.height * scale;
+        const x = (canvas.width - w) / 2;
+        const y = (canvas.height - h) / 2;
+        ctx.drawImage(cachedBgImage, x, y, w, h);
+      } else {
+        const tpl = changeBgTemplate || bgTemplates[0];
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, tpl.gStart);
+        gradient.addColorStop(1, tpl.gEnd);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
       ctx.restore();
 
@@ -657,9 +852,14 @@ function initReplaceBgPanel() {
       alert('Please upload a transparent subject first');
       return;
     }
-    const dataUrl = canvas.toDataURL('image/png');
-    triggerDownload(dataUrl, 'studio-placement.png');
-    saveEditsHistory('BG Replace', 'Created studio composite', dataUrl);
+    try {
+      const dataUrl = canvas.toDataURL('image/png');
+      triggerDownload(dataUrl, 'studio-placement.png');
+      saveEditsHistory('BG Replace', 'Created studio composite', dataUrl);
+    } catch (err) {
+      console.error(err);
+      alert('Security Error: Failed to export composite canvas. Make sure background image is fully loaded with CORS allowed.');
+    }
   });
 }
 
@@ -673,6 +873,8 @@ function initAIStudioPanel() {
   const previewBox = document.getElementById('ai-preview-box');
   const previewImg = document.getElementById('ai-preview-img');
   const emptyPreview = document.getElementById('ai-empty-preview');
+
+  const btnOptimize = document.getElementById('btn-ai-optimize-prompt');
 
   // Trigger prompt changes on style selects
   categorySelect.addEventListener('change', () => {
@@ -695,12 +897,253 @@ function initAIStudioPanel() {
   });
   categorySelect.dispatchEvent(new Event('change'));
 
-  btnGenerate.addEventListener('click', () => {
+  // Optimize prompt with Gemini 1.5 Flash
+  btnOptimize.addEventListener('click', async () => {
+    const promptText = promptInput.value.trim();
+    if (!promptText) {
+      alert('Por favor, digite um prompt primeiro');
+      return;
+    }
+
+    if (!geminiApiKey) {
+      alert('Por favor, configure sua Gemini API Key nas Configurações para otimizar prompts!');
+      return;
+    }
+
+    btnOptimize.disabled = true;
+    btnOptimize.textContent = 'A otimizar com Gemini...';
+
+    try {
+      // 1. Fetch available models dynamically from the user's API Key
+      let chosenModel = 'models/gemini-1.5-flash'; // Default fallback
+      try {
+        const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${geminiApiKey}`);
+        if (listResponse.ok) {
+          const listData = await listResponse.json();
+          if (listData.models && listData.models.length > 0) {
+            // Find all models that support content generation
+            const candidateModels = listData.models.filter(m => 
+              m.supportedGenerationMethods && 
+              m.supportedGenerationMethods.includes('generateContent')
+            );
+            
+            if (candidateModels.length > 0) {
+              // Prefer list of standard/stable models
+              const preferList = [
+                'models/gemini-2.5-flash',
+                'models/gemini-2.0-flash',
+                'models/gemini-1.5-flash',
+                'models/gemini-1.5-flash-latest',
+                'models/gemini-pro'
+              ];
+              
+              let found = null;
+              for (const pref of preferList) {
+                found = candidateModels.find(m => m.name === pref || m.name.endsWith(pref.replace('models/', '')));
+                if (found) break;
+              }
+              
+              if (found) {
+                chosenModel = found.name;
+              } else {
+                // Fallback to first available gemini model
+                const firstGemini = candidateModels.find(m => m.name.includes('gemini'));
+                if (firstGemini) chosenModel = firstGemini.name;
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Could not list models dynamically, using default:', e);
+      }
+
+      if (!chosenModel.startsWith('models/')) {
+        chosenModel = 'models/' + chosenModel;
+      }
+
+      console.log('Using Gemini model:', chosenModel);
+
+      // 2. Call generateContent with the chosen model
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1/${chosenModel}:generateContent?key=${geminiApiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Enhance this product image background prompt to be highly detailed and professional for a text-to-image generator like Imagen: '${promptText}'. Return only the enhanced prompt text, without quotes, notes, or extra explanation.`
+            }]
+          }]
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Erro na API do Gemini');
+      }
+
+      if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+        const enhancedPrompt = data.candidates[0].content.parts[0].text.trim();
+        promptInput.value = enhancedPrompt;
+        alert('Prompt otimizado com sucesso pelo Gemini!');
+      } else {
+        alert('Não foi possível otimizar o prompt. Tente novamente.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert(`Erro ao otimizar prompt: ${err.message}`);
+    } finally {
+      btnOptimize.disabled = false;
+      btnOptimize.textContent = 'Optimize Prompt with Gemini';
+    }
+  });
+
+  btnGenerate.addEventListener('click', async () => {
+    const promptText = promptInput.value.trim();
+    if (!promptText) {
+      alert('Por favor, introduza um prompt primeiro');
+      return;
+    }
+
     btnGenerate.disabled = true;
     spinner.style.display = 'inline-block';
-    
-    // Simulate Stable Diffusion HD generation time
-    setTimeout(() => {
+
+    if (geminiApiKey) {
+      // Robust Image Generation Flow supporting multiple strategies
+      try {
+        let imageBase64 = null;
+        let methodUsed = '';
+
+        // Strategy A: Try listing models and calling gemini-2.5-flash-image or similar
+        try {
+          const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`);
+          if (listResponse.ok) {
+            const listData = await listResponse.json();
+            if (listData.models && listData.models.length > 0) {
+              const imageModels = listData.models.filter(m => m.name.toLowerCase().includes('image') && m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'));
+              if (imageModels.length > 0) {
+                // Prefer gemini-3.1-flash-image or gemini-2.5-flash-image
+                const chosenGenImageModel = imageModels.find(m => m.name.includes('gemini-2.5-flash-image') || m.name.includes('gemini-3.1-flash-image')) || imageModels[0];
+                let modelPath = chosenGenImageModel.name;
+                if (!modelPath.startsWith('models/')) {
+                  modelPath = 'models/' + modelPath;
+                }
+
+                console.log('Strategy A: Attempting generateContent with', modelPath);
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${geminiApiKey}`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [{
+                      parts: [{
+                        text: promptText
+                      }]
+                    }],
+                    generationConfig: {
+                      responseModalities: ["TEXT", "IMAGE"]
+                    }
+                  })
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  if (data.candidates && data.candidates[0]?.content?.parts) {
+                    // Look for inlineData part with image mimeType
+                    const imagePart = data.candidates[0].content.parts.find(p => p.inlineData && p.inlineData.mimeType && p.inlineData.mimeType.startsWith('image/'));
+                    if (imagePart) {
+                      imageBase64 = imagePart.inlineData.data;
+                      methodUsed = 'Gemini Multimodal (' + modelPath + ')';
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch (errA) {
+          console.warn('Strategy A failed:', errA);
+        }
+
+        // Strategy B: If Strategy A did not yield an image, try the legacy Imagen prediction path
+        if (!imageBase64) {
+          try {
+            // Find active Imagen models
+            let chosenModel = 'models/imagen-3.0-generate-002'; // default fallback
+            const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`);
+            if (listResponse.ok) {
+              const listData = await listResponse.json();
+              if (listData.models && listData.models.length > 0) {
+                const imagenModels = listData.models.filter(m => m.name.toLowerCase().includes('imagen'));
+                if (imagenModels.length > 0) {
+                  const preferred = imagenModels.find(m => m.name.includes('imagen-3.0-generate') || m.name.includes('imagen-3.0-fast') || m.name.includes('imagen-3.0'));
+                  chosenModel = preferred ? preferred.name : imagenModels[0].name;
+                }
+              }
+            }
+
+            if (!chosenModel.startsWith('models/')) {
+              chosenModel = 'models/' + chosenModel;
+            }
+            console.log('Strategy B: Attempting Imagen predict with', chosenModel);
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${chosenModel}:predict?key=${geminiApiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                instances: [{ prompt: promptText }],
+                parameters: {
+                  sampleCount: 1,
+                  outputMimeType: 'image/jpeg',
+                  aspectRatio: '1:1'
+                }
+              })
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data.predictions && data.predictions.length > 0) {
+                imageBase64 = data.predictions[0].bytesBase64Encoded;
+                methodUsed = 'Imagen Predict (' + chosenModel + ')';
+              }
+            } else {
+              const errData = await response.json();
+              throw new Error(errData.error?.message || 'Predict failed');
+            }
+          } catch (errB) {
+            console.warn('Strategy B failed:', errB);
+            throw new Error(errB.message || 'Todas as estratégias da API do Gemini falharam');
+          }
+        }
+
+        if (imageBase64) {
+          const url = `data:image/jpeg;base64,${imageBase64}`;
+          
+          previewImg.src = url;
+          previewBox.style.display = 'block';
+          emptyPreview.style.display = 'none';
+
+          saveEditsHistory('AI Gen', 'Gemini AI Backdrop (' + methodUsed + ')', url);
+          triggerDownload(url, 'gemini-imagen-studio.jpg');
+        } else {
+          throw new Error('Nenhuma imagem retornada das APIs do Gemini');
+        }
+      } catch (err) {
+        console.error(err);
+        alert(`Erro de Geração Gemini: ${err.message}. A recorrer à demonstração local.`);
+        generateDemoScene();
+      } finally {
+        btnGenerate.disabled = false;
+        spinner.style.display = 'none';
+      }
+    } else {
+      // Fallback demo generation
+      alert('Demonstração: Chave API Gemini não configurada nas configurações. A gerar imagem simulada...');
+      setTimeout(() => {
+        generateDemoScene();
+        btnGenerate.disabled = false;
+        spinner.style.display = 'none';
+      }, 1500);
+    }
+
+    function generateDemoScene() {
       const canvas = document.createElement('canvas');
       canvas.width = 800;
       canvas.height = 800;
@@ -753,12 +1196,9 @@ function initAIStudioPanel() {
       previewBox.style.display = 'block';
       emptyPreview.style.display = 'none';
 
-      btnGenerate.disabled = false;
-      spinner.style.display = 'none';
-
-      saveEditsHistory('AI Gen', 'AI Background Generation', url);
+      saveEditsHistory('AI Gen', 'AI Background Generation (Demo)', url);
       triggerDownload(url, 'ai-generated-studio.jpg');
-    }, 2500);
+    }
   });
 }
 
@@ -777,15 +1217,84 @@ function initBatchPanel() {
   const resultList = document.getElementById('batch-result-list');
   const btnDownloadZip = document.getElementById('btn-batch-download-zip');
 
+  // Premium settings elements
+  const batchWidthInput = document.getElementById('batch-width');
+  const batchHeightInput = document.getElementById('batch-height');
+  const bgFillSelect = document.getElementById('batch-bg-fill-select');
+  const bgFillCustomInput = document.getElementById('batch-bg-fill-custom');
+  const batchFormatSelect = document.getElementById('batch-format-select');
+  const batchQualityInput = document.getElementById('batch-quality');
+  const batchQualityVal = document.getElementById('batch-quality-val');
+
+  // Toggle custom color input visibility
+  bgFillSelect.addEventListener('change', () => {
+    if (bgFillSelect.value === 'custom') {
+      bgFillCustomInput.style.display = 'block';
+    } else {
+      bgFillCustomInput.style.display = 'none';
+    }
+  });
+
+  // Quality display value
+  batchQualityInput.addEventListener('input', () => {
+    batchQualityVal.textContent = `${batchQualityInput.value}%`;
+  });
+
   dropzone.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
       batchFiles = Array.from(e.target.files);
       countLabel.textContent = `${batchFiles.length} files selected`;
       btnProcess.disabled = false;
-      emptyPreview.style.display = 'block';
-      progressBox.style.display = 'none';
+      emptyPreview.style.display = 'none';
+      progressBox.style.display = 'block';
       btnDownloadZip.style.display = 'none';
+      
+      // Populate Queue List with thumbnails and pending state
+      resultList.innerHTML = '';
+      batchFiles.forEach((file, idx) => {
+        const row = document.createElement('div');
+        row.className = 'batch-item-row';
+        row.id = `batch-row-${idx}`;
+        
+        const thumb = document.createElement('img');
+        thumb.className = 'batch-item-thumb';
+        thumb.src = 'icons/icon48.png'; // temporary fallback
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          thumb.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        const info = document.createElement('div');
+        info.className = 'batch-item-info';
+        
+        const name = document.createElement('div');
+        name.className = 'batch-item-name';
+        name.textContent = file.name;
+        
+        const size = document.createElement('div');
+        size.className = 'batch-item-size';
+        size.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+
+        info.appendChild(name);
+        info.appendChild(size);
+
+        const badge = document.createElement('span');
+        badge.className = 'batch-item-status-badge pending';
+        badge.id = `batch-badge-${idx}`;
+        badge.textContent = 'Pendente';
+
+        row.appendChild(thumb);
+        row.appendChild(info);
+        row.appendChild(badge);
+        resultList.appendChild(row);
+      });
+
+      // Reset progress bar
+      progressBar.style.width = '0%';
+      progressStatus.textContent = `Ready (0 of ${batchFiles.length} files)`;
     }
   });
 
@@ -793,9 +1302,6 @@ function initBatchPanel() {
     if (batchFiles.length === 0) return;
 
     btnProcess.disabled = true;
-    emptyPreview.style.display = 'none';
-    progressBox.style.display = 'block';
-    resultList.innerHTML = '';
     btnDownloadZip.style.display = 'none';
 
     progressBar.style.width = '0%';
@@ -804,6 +1310,15 @@ function initBatchPanel() {
     const zip = new MiniZip();
     let index = 0;
 
+    // Read Premium parameters
+    const targetW = parseInt(batchWidthInput.value) || 800;
+    const targetH = parseInt(batchHeightInput.value) || 800;
+    const bgFill = bgFillSelect.value;
+    const customColor = bgFillCustomInput.value.trim() || '#FFFFFF';
+    const format = batchFormatSelect.value;
+    const q = parseFloat(batchQualityInput.value) / 100;
+    const operation = operationSelect.value;
+
     function processNext() {
       if (index >= batchFiles.length) {
         // Complete! Create zip
@@ -811,7 +1326,15 @@ function initBatchPanel() {
         batchProcessedZipData = new Blob([zipBuffer], { type: 'application/zip' });
         btnDownloadZip.style.display = 'block';
         btnProcess.disabled = false;
+        progressStatus.textContent = `Completed! Compiled ${batchFiles.length} images into ZIP.`;
         return;
+      }
+
+      // Update badge status to processing
+      const badge = document.getElementById(`batch-badge-${index}`);
+      if (badge) {
+        badge.className = 'batch-item-status-badge processing';
+        badge.textContent = 'A processar';
       }
 
       const file = batchFiles[index];
@@ -821,29 +1344,97 @@ function initBatchPanel() {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          canvas.width = 800;
-          canvas.height = 800;
+          canvas.width = targetW;
+          canvas.height = targetH;
           const ctx = canvas.getContext('2d');
 
           // Action selection
-          if (operationSelect.value === 'resize') {
-            ctx.drawImage(img, 0, 0, 800, 800);
+          if (operation === 'resize') {
+            ctx.drawImage(img, 0, 0, targetW, targetH);
           } else {
-            // Remove bg simulation + resize
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0,0,800,800); // Draw white bg or transparent
-            ctx.drawImage(img, 100, 100, 600, 600);
+            // Remove bg simulation + Resize
+            // 1. Draw solid background if configured
+            if (bgFill === 'white') {
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, targetW, targetH);
+            } else if (bgFill === 'black') {
+              ctx.fillStyle = '#000000';
+              ctx.fillRect(0, 0, targetW, targetH);
+            } else if (bgFill === 'custom') {
+              ctx.fillStyle = customColor;
+              ctx.fillRect(0, 0, targetW, targetH);
+            }
+
+            // 2. Perform bg removal segmentation on temporary canvas
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = img.width;
+            tempCanvas.height = img.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(img, 0, 0);
+
+            const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imgData.data;
+
+            // Sample corner background color reference
+            const bgR = data[0];
+            const bgG = data[1];
+            const bgB = data[2];
+
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i];
+              const g = data[i+1];
+              const b = data[i+2];
+
+              // Color distance
+              const distance = Math.sqrt(
+                Math.pow(r - bgR, 2) +
+                Math.pow(g - bgG, 2) +
+                Math.pow(b - bgB, 2)
+              );
+
+              // Key out
+              if (distance < 120) {
+                data[i+3] = 0; // Alpha transparent
+              }
+            }
+            tempCtx.putImageData(imgData, 0, 0);
+
+            // 3. Draw segmented subject centered on main canvas
+            const maxDim = Math.min(targetW, targetH) * 0.8;
+            let w = img.width;
+            let h = img.height;
+
+            if (w > h) {
+              h = (maxDim / w) * h;
+              w = maxDim;
+            } else {
+              w = (maxDim / h) * w;
+              h = maxDim;
+            }
+
+            const x = (targetW - w) / 2;
+            const y = (targetH - h) / 2;
+
+            ctx.drawImage(tempCanvas, x, y, w, h);
           }
 
-          // Extract arrayBuffer from canvas base64 to build raw uncompressed zip archive
-          const base64 = canvas.toDataURL('image/png').split(',')[1];
+          // Extract arrayBuffer from canvas base64 to build ZIP archive
+          const mime = format;
+          const extension = format.split('/')[1] || 'png';
+          const base64 = canvas.toDataURL(mime, q).split(',')[1];
           const binary = atob(base64);
           const array = new Uint8Array(binary.length);
           for (let i = 0; i < binary.length; i++) {
             array[i] = binary.charCodeAt(i);
           }
 
-          zip.addFile(`processed-${file.name.replace(/\.[^/.]+$/, "")}.png`, array.buffer);
+          zip.addFile(`processed-${file.name.replace(/\.[^/.]+$/, "")}.${extension}`, array.buffer);
+
+          // Update row badge status to completed
+          if (badge) {
+            badge.className = 'batch-item-status-badge completed';
+            badge.textContent = 'Concluído';
+          }
 
           // Update Progress
           index++;
@@ -851,14 +1442,15 @@ function initBatchPanel() {
           progressBar.style.width = `${percent}%`;
           progressStatus.textContent = `${percent}% (${index} of ${batchFiles.length} files)`;
 
-          const statusItem = document.createElement('div');
-          statusItem.style.fontSize = '10px';
-          statusItem.style.color = '#a7f3d0';
-          statusItem.style.padding = '4px 0';
-          statusItem.textContent = `✓ Processed: ${file.name}`;
-          resultList.appendChild(statusItem);
-
-          setTimeout(processNext, 200); // Small interval for visual smooth loading
+          setTimeout(processNext, 150); // Small interval for smooth processing feedback
+        };
+        img.onerror = () => {
+          if (badge) {
+            badge.className = 'batch-item-status-badge error';
+            badge.textContent = 'Erro';
+          }
+          index++;
+          processNext();
         };
         img.src = e.target.result;
       };

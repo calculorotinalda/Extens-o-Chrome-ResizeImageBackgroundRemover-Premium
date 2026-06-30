@@ -7,6 +7,11 @@
     "storage",
     "activeTab"
   ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "https://resizeimagebackgroundremover.alwaysdata.net/*",
+    "https://images.unsplash.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

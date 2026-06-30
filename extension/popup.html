@@ -48,9 +48,9 @@
           <span class="tooltip">Batch Processing</span>
         </button>
 
-        <button class="nav-item" data-target="panel-account" id="nav-account" style="margin-top: auto;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          <span class="tooltip">Licensing & Account</span>
+        <button class="nav-item" data-target="panel-settings" id="nav-settings" style="margin-top: auto;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="tooltip">Configurações & Conta</span>
         </button>
       </div>
     </nav>
@@ -165,9 +165,14 @@
               </div>
             </div>
 
-            <button class="btn btn-primary btn-block" id="btn-resize-process" style="margin-top:auto;">
-              Download Resized
-            </button>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:auto;">
+              <button class="btn btn-primary btn-block" id="btn-resize-now">
+                Resize Image
+              </button>
+              <button class="btn btn-gradient-premium btn-block" id="btn-resize-process" style="display: none;">
+                Download Resized
+              </button>
+            </div>
           </div>
 
           <div class="preview-window">
@@ -268,9 +273,14 @@
 
             <div class="control-group">
               <span class="control-label">Select Studio Backdrop</span>
-              <div class="preset-grid" id="bg-preset-grid">
+              <div class="preset-grid" id="bg-preset-grid" style="margin-bottom: 8px;">
                 <!-- Preset backgrounds loaded dynamically -->
               </div>
+              <button class="btn btn-secondary btn-block" id="btn-upload-custom-bg" style="font-size: 11px; padding: 6px 12px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Custom Background
+              </button>
+              <input type="file" id="bg-custom-file-input" accept="image/*" style="display: none;">
             </div>
 
             <div class="control-group">
@@ -304,7 +314,7 @@
           </div>
 
           <div class="preview-window">
-            <div class="preview-img-container" id="bg-preview-box" style="display: none; width:280px; height:280px;">
+            <div class="preview-img-container" id="bg-preview-box" style="display: none; width:320px; height:320px; max-width:90%; max-height:90%;">
               <!-- Composite Canvas Preview -->
               <canvas id="bg-composite-canvas" width="600" height="600" style="width: 100%; height:100%; object-fit:contain; display:block;"></canvas>
             </div>
@@ -344,6 +354,10 @@
             <div class="control-group">
               <span class="control-label">Custom AI Prompt</span>
               <textarea id="ai-prompt-input" rows="3" style="width:100%; border-radius:10px; background:rgba(15,23,42,0.6); border:1px solid var(--color-border); padding:8px 12px; color:#fff; font-size:12px; outline:none; resize:none;" placeholder="A perfume bottle sitting on a sleek white marble platform, warm volumetric lighting, high realism..."></textarea>
+              <button class="btn btn-secondary btn-block" id="btn-ai-optimize-prompt" style="font-size: 11px; padding: 6px 12px; margin-top: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                Optimize Prompt with Gemini
+              </button>
             </div>
 
             <div class="control-group">
@@ -405,7 +419,44 @@
               </select>
             </div>
 
-            <button class="btn btn-primary btn-block" id="btn-batch-process" style="margin-top:auto;" disabled>
+            <!-- Premium Batch Settings -->
+            <div class="control-group" id="batch-premium-options">
+              <span class="control-label">Batch Resize Size (px)</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <input type="number" id="batch-width" placeholder="Width" value="800">
+                <input type="number" id="batch-height" placeholder="Height" value="800">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Batch Background Fill</span>
+              <select id="batch-bg-fill-select">
+                <option value="transparent">Transparent (PNG/WEBP)</option>
+                <option value="white">Solid White</option>
+                <option value="black">Solid Black</option>
+                <option value="custom">Custom Color</option>
+              </select>
+              <input type="text" id="batch-bg-fill-custom" placeholder="#FFFFFF" style="display: none; margin-top: 4px; font-family: monospace;">
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Batch Export Format</span>
+              <select id="batch-format-select">
+                <option value="image/png">PNG</option>
+                <option value="image/jpeg">JPG</option>
+                <option value="image/webp">WEBP</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Batch Export Quality</span>
+              <div class="slider-group">
+                <input type="range" id="batch-quality" min="10" max="100" value="85">
+                <span class="slider-val" id="batch-quality-val">85%</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="btn-batch-process" style="margin-top:12px;" disabled>
               Process Batch List
             </button>
           </div>
@@ -435,50 +486,114 @@
         </div>
       </div>
 
-      <!-- 7. PANEL: Account (Licensing) -->
-      <div class="content-panel" id="panel-account">
-        <div style="max-width:440px; margin: 0 auto; display:flex; flex-direction:column; gap:20px; padding-top:10px;">
+      <!-- 7. PANEL: Settings & Account (Configurações) -->
+      <div class="content-panel" id="panel-settings">
+        <div style="max-width:560px; margin: 0 auto; display:flex; flex-direction:column; gap:20px; padding-top:10px; padding-bottom:30px;">
           
+          <!-- Theme Settings Card -->
           <div class="stats-card glass-card">
-            <h3 style="font-size:14px; font-weight:600;">Licensing Status</h3>
-            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Configure license credentials to activate premium tools.</p>
+            <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.02 12.02l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path></svg>
+              <span>Aparência & Tema</span>
+            </h3>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Escolha a aparência visual que melhor se adapta ao seu fluxo de trabalho.</p>
+            
+            <div style="display: flex; gap: 12px;">
+              <button class="btn btn-secondary" id="btn-theme-dark" style="flex: 1; gap: 6px;">
+                🌙 Escuro
+              </button>
+              <button class="btn btn-secondary" id="btn-theme-light" style="flex: 1; gap: 6px;">
+                ☀️ Claro
+              </button>
+            </div>
+          </div>
+
+          <!-- Gemini API Config Card -->
+          <div class="stats-card glass-card">
+            <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l.707-.707m2.828 9.9a5 5 0 1 1 5.656 0M9 21h6"></path></svg>
+              <span>Integração Google Gemini API</span>
+            </h3>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Introduza a sua chave API do Gemini para ativar a inteligência artificial Imagen 3 no AI Studio.</p>
+            
+            <div class="control-group">
+              <span class="control-label">Gemini API Key</span>
+              <div style="display: flex; gap: 8px;">
+                <input type="password" id="gemini-api-key-input" placeholder="AIzaSy..." style="font-family:monospace; font-size:13px; flex-grow: 1;">
+                <button class="btn btn-secondary" id="btn-toggle-gemini-key" style="padding: 0 12px;" title="Mostrar/Ocultar Chave">👁️</button>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button class="btn btn-primary" id="btn-save-gemini-key" style="flex: 1;">
+                Salvar Chave API
+              </button>
+              <a class="btn btn-secondary" href="https://aistudio.google.com/" target="_blank" style="text-decoration: none;">
+                Obter Chave Grátis
+              </a>
+            </div>
+          </div>
+
+          <!-- External Portal & Website Links Card -->
+          <div class="stats-card glass-card">
+            <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              <span>Website & Suporte</span>
+            </h3>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Aceda ao portal web oficial da extensão para gerir subscrições, comprar créditos ou ver tutoriais.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <a class="btn btn-gradient-premium" href="https://resizeimagebackgroundremover.alwaysdata.net" target="_blank" style="text-decoration: none; width: 100%;">
+                Aceder ao Portal Oficial
+              </a>
+              <a class="btn btn-secondary" href="https://resizeimagebackgroundremover.alwaysdata.net/#pricing" target="_blank" style="text-decoration: none; width: 100%;">
+                Ver Planos de Subscrição
+              </a>
+            </div>
+          </div>
+
+          <!-- Licensing Status Card -->
+          <div class="stats-card glass-card">
+            <h3 style="font-size:14px; font-weight:600;">Licença Premium da Extensão</h3>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Ative a sua licença comprada no site para desbloquear todos os recursos offline.</p>
             
             <div class="control-group">
               <span class="control-label">License Key</span>
               <input type="text" id="license-key-input" placeholder="FREE-XXXX-XXXX-XXXX-XXXX" style="font-family:monospace; font-size:13px; text-transform:uppercase;">
             </div>
 
-            <div class="control-group" style="margin-top: 8px;">
+            <div class="control-group" style="margin-top: 8px; display: none;">
               <span class="control-label">Licensing Portal Host</span>
               <input type="text" id="license-host-input" value="https://resizeimagebackgroundremover.alwaysdata.net" style="font-size:12px;">
             </div>
 
             <button class="btn btn-primary" id="btn-license-activate" style="margin-top:12px;">
-              Verify and Activate Key
+              Verificar e Ativar Licença
             </button>
           </div>
 
+          <!-- License Active Detail Info Card -->
           <div class="stats-card glass-card" id="license-info-card" style="display:none;">
             <h3 style="font-size:13px; font-weight:600; color:var(--color-success); display:flex; align-items:center; gap:6px;">
               <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              <span>License Active</span>
+              <span>Licença Premium Ativa</span>
             </h3>
             
             <div style="display:flex; flex-direction:column; gap:8px; font-size:12px; margin-top:8px;">
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Subscriber:</span>
+                <span style="color:var(--color-text-secondary)">Cliente:</span>
                 <span id="lic-owner" style="font-weight:600;">John Doe</span>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Registered Email:</span>
+                <span style="color:var(--color-text-secondary)">Email Registado:</span>
                 <span id="lic-email" style="font-weight:600;">john@example.com</span>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Plan Tier:</span>
+                <span style="color:var(--color-text-secondary)">Plano Ativado:</span>
                 <span id="lic-plan" style="font-weight:700; color:var(--color-primary);">Premium</span>
               </div>
               <div style="display:flex; justify-content:space-between; padding-bottom:2px;">
-                <span style="color:var(--color-text-secondary)">Expiration:</span>
+                <span style="color:var(--color-text-secondary)">Validade:</span>
                 <span id="lic-expires" style="font-weight:600;">Never (Lifetime)</span>
               </div>
             </div>
