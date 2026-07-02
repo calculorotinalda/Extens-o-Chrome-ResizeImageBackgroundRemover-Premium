@@ -952,3 +952,22 @@ body.theme-light .batch-item-row {
   background-color: rgba(239, 68, 68, 0.15);
   color: var(--color-danger);
 }
+
+/* Image Crop overlay and editor elements */
+#resize-crop-overlay {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#resize-crop-box {
+  pointer-events: auto;
+}
+
+.crop-handle {
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.crop-handle:hover {
+  transform: scale(1.4);
+  background-color: var(--color-secondary) !important;
+}

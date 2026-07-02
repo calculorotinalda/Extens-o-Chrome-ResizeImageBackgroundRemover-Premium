@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Image Editor Premium</title>
-  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="popup.css?v=2">
 </head>
 <body>
   <div class="app-container">
@@ -180,9 +180,54 @@
               </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:8px; margin-top:auto;">
+            <div class="control-group">
+              <span class="control-label" data-i18n="resize_label_opacity">Image Opacity</span>
+              <div class="slider-group">
+                <input type="range" id="resize-opacity" min="0" max="100" value="100">
+                <span class="slider-val" id="resize-opacity-val">100%</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label" data-i18n="resize_label_rotate">Rotate Image</span>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary" id="btn-rotate-left" style="flex: 1; padding: 6px 12px; gap: 4px;" title="Rotate Left" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+                  <span style="font-size: 11px;" data-i18n="btn_rotate_left">Left</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-rotate-right" style="flex: 1; padding: 6px 12px; gap: 4px;" title="Rotate Right" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+                  <span style="font-size: 11px;" data-i18n="btn_rotate_right">Right</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label" data-i18n="resize_label_crop">Crop Image</span>
+              <button class="btn btn-secondary btn-block" id="btn-toggle-crop" type="button" style="padding: 8px 12px; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.13 1L6 16h15"/><path d="M1 6.13L16 6v15"/></svg>
+                <span id="text-toggle-crop" data-i18n="btn_crop_enable">Enable Crop</span>
+              </button>
+              
+              <div id="crop-options" style="display: none; margin-top: 8px; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px; border-radius: 8px; border: 1px solid var(--color-border);">
+                <span class="control-label" style="font-size: 10px; font-weight: normal; margin-bottom: 2px;" data-i18n="crop_aspect_ratio">Crop Aspect Ratio</span>
+                <select id="crop-aspect-ratio" style="height: 32px; padding: 4px 8px; font-size: 11px;">
+                  <option value="free" data-i18n="crop_aspect_free">Free</option>
+                  <option value="1:1" data-i18n="crop_aspect_square">1:1 (Square)</option>
+                  <option value="16:9" data-i18n="crop_aspect_16_9">16:9 (Widescreen)</option>
+                  <option value="4:3" data-i18n="crop_aspect_4_3">4:3 (Standard)</option>
+                </select>
+                <button class="btn btn-primary btn-block" id="btn-crop-apply" style="font-size: 11px; padding: 6px 12px;" data-i18n="btn_crop_apply" type="button">
+                  Apply Crop Selection
+                </button>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:auto; padding-top: 10px;">
               <button class="btn btn-primary btn-block" id="btn-resize-now" data-i18n="btn_resize_now">
                 Resize Image
+              </button>
+              <button class="btn btn-secondary btn-block" id="btn-download-adjusted" style="display: none;" data-i18n="btn_download_current">
+                Download Current Image
               </button>
               <button class="btn btn-gradient-premium btn-block" id="btn-resize-process" style="display: none;" data-i18n="btn_resize_download">
                 Download Resized
@@ -193,6 +238,16 @@
           <div class="preview-window">
             <div class="preview-img-container" id="resize-preview-box" style="display: none;">
               <img class="preview-img" id="resize-preview-img">
+              <!-- Crop Overlay Container -->
+              <div id="resize-crop-overlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: auto; z-index: 10;">
+                <div id="resize-crop-box" style="position: absolute; border: 2px dashed var(--color-primary); box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); cursor: move; box-sizing: border-box;">
+                  <!-- Corner resize handles -->
+                  <div class="crop-handle tl" style="position: absolute; width: 10px; height: 10px; background: var(--color-primary); border: 1px solid #fff; top: -5px; left: -5px; cursor: nwse-resize; border-radius: 50%;"></div>
+                  <div class="crop-handle tr" style="position: absolute; width: 10px; height: 10px; background: var(--color-primary); border: 1px solid #fff; top: -5px; right: -5px; cursor: nesw-resize; border-radius: 50%;"></div>
+                  <div class="crop-handle bl" style="position: absolute; width: 10px; height: 10px; background: var(--color-primary); border: 1px solid #fff; bottom: -5px; left: -5px; cursor: nesw-resize; border-radius: 50%;"></div>
+                  <div class="crop-handle br" style="position: absolute; width: 10px; height: 10px; background: var(--color-primary); border: 1px solid #fff; bottom: -5px; right: -5px; cursor: nwse-resize; border-radius: 50%;"></div>
+                </div>
+              </div>
             </div>
             <div id="resize-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
@@ -682,7 +737,7 @@
 
   <!-- Load JSZIP library locally or mock zip export to prevent remote dependency issues. 
        We bundle a tiny standalone mock JSZip in popup.js or load standard JSZip code inside popup.js directly! -->
-  <script src="translations.js"></script>
-  <script src="popup.js"></script>
+  <script src="translations.js?v=2"></script>
+  <script src="popup.js?v=2"></script>
 </body>
 </html>

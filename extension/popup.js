@@ -475,8 +475,24 @@ function initResizePanel() {
   const previewImg = document.getElementById('resize-preview-img');
   const emptyPreview = document.getElementById('resize-empty-preview');
 
+  // New controls
+  const opacityInput = document.getElementById('resize-opacity');
+  const opacityVal = document.getElementById('resize-opacity-val');
+  const btnRotateLeft = document.getElementById('btn-rotate-left');
+  const btnRotateRight = document.getElementById('btn-rotate-right');
+  const btnToggleCrop = document.getElementById('btn-toggle-crop');
+  const textToggleCrop = document.getElementById('text-toggle-crop');
+  const cropOptions = document.getElementById('crop-options');
+  const cropAspectRatio = document.getElementById('crop-aspect-ratio');
+  const btnCropApply = document.getElementById('btn-crop-apply');
+  const cropOverlay = document.getElementById('resize-crop-overlay');
+  const cropBox = document.getElementById('resize-crop-box');
+  const btnDownloadAdjusted = document.getElementById('btn-download-adjusted');
+
   let resizeOriginalSrc = null;
   let resizedDataUrl = null;
+  let resizeOpacity = 100;
+  let isCropActive = false;
 
   // Trigger File Input Click
   dropzone.addEventListener('click', () => fileInput.click());
@@ -524,6 +540,306 @@ function initResizePanel() {
     btnProcess.style.display = 'none';
   });
 
+  // Opacity slider handler
+  opacityInput.addEventListener('input', () => {
+    resizeOpacity = parseInt(opacityInput.value) || 100;
+    opacityVal.textContent = `${resizeOpacity}%`;
+    previewImg.style.opacity = resizeOpacity / 100;
+    btnProcess.style.display = 'none';
+  });
+
+  // Rotate handler
+  btnRotateLeft.addEventListener('click', () => rotateImage('left'));
+  btnRotateRight.addEventListener('click', () => rotateImage('right'));
+
+  // Download adjusted handler
+  btnDownloadAdjusted.addEventListener('click', () => {
+    if (!resizeOriginalSrc) {
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
+      return;
+    }
+    const baseName = resizeFile ? resizeFile.name.substring(0, resizeFile.name.lastIndexOf('.')) : 'image';
+    const format = formatSelect.value;
+    const extension = format.split('/')[1] || 'png';
+    triggerDownload(resizeOriginalSrc, `edited-${baseName}.${extension}`);
+    saveEditsHistory('Resize', `Edited image ${baseName}`, resizeOriginalSrc);
+  });
+
+  // Toggle Crop mode
+  btnToggleCrop.addEventListener('click', () => {
+    if (!resizeOriginalSrc) {
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
+      return;
+    }
+    isCropActive = !isCropActive;
+    if (isCropActive) {
+      btnToggleCrop.classList.remove('btn-secondary');
+      btnToggleCrop.classList.add('btn-primary');
+      textToggleCrop.textContent = getTranslation(currentLanguage, 'btn_crop_disable');
+      cropOptions.style.display = 'flex';
+      initCropOverlay();
+    } else {
+      btnToggleCrop.classList.add('btn-secondary');
+      btnToggleCrop.classList.remove('btn-primary');
+      textToggleCrop.textContent = getTranslation(currentLanguage, 'btn_crop_enable');
+      cropOptions.style.display = 'none';
+      cropOverlay.style.display = 'none';
+    }
+    btnProcess.style.display = 'none';
+  });
+
+  // Crop Aspect Ratio change
+  cropAspectRatio.addEventListener('change', () => {
+    initCropOverlay();
+  });
+
+  // Apply Crop
+  btnCropApply.addEventListener('click', () => {
+    applyCropToImage();
+  });
+
+  function rotateImage(direction) {
+    if (!resizeOriginalSrc) {
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
+      return;
+    }
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.height;
+      canvas.height = img.width;
+      const ctx = canvas.getContext('2d');
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      if (direction === 'left') {
+        ctx.rotate(-Math.PI / 2);
+      } else {
+        ctx.rotate(Math.PI / 2);
+      }
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      
+      resizeOriginalSrc = canvas.toDataURL(formatSelect.value, 0.95);
+      previewImg.src = resizeOriginalSrc;
+      btnProcess.style.display = 'none';
+      btnDownloadAdjusted.style.display = 'block';
+
+      // Swap custom dimensions if custom preset
+      if (presetSelect.value === 'custom') {
+        const temp = widthInput.value;
+        widthInput.value = heightInput.value;
+        heightInput.value = temp;
+      }
+
+      if (isCropActive) {
+        setTimeout(initCropOverlay, 50);
+      }
+    };
+    img.src = resizeOriginalSrc;
+  }
+
+  function initCropOverlay() {
+    if (!resizeOriginalSrc) return;
+    const width = previewImg.clientWidth;
+    const height = previewImg.clientHeight;
+
+    if (width === 0 || height === 0) {
+      setTimeout(initCropOverlay, 50);
+      return;
+    }
+
+    cropOverlay.style.width = width + 'px';
+    cropOverlay.style.height = height + 'px';
+    cropOverlay.style.left = previewImg.offsetLeft + 'px';
+    cropOverlay.style.top = previewImg.offsetTop + 'px';
+    cropOverlay.style.display = 'block';
+
+    let boxW = Math.round(width * 0.8);
+    let boxH = Math.round(height * 0.8);
+
+    const aspect = cropAspectRatio.value;
+    if (aspect === '1:1') {
+      const side = Math.min(boxW, boxH);
+      boxW = boxH = side;
+    } else if (aspect === '16:9') {
+      if (boxW * (9 / 16) <= boxH) {
+        boxH = Math.round(boxW * (9 / 16));
+      } else {
+        boxW = Math.round(boxH * (16 / 9));
+      }
+    } else if (aspect === '4:3') {
+      if (boxW * (3 / 4) <= boxH) {
+        boxH = Math.round(boxW * (3 / 4));
+      } else {
+        boxW = Math.round(boxH * (4 / 3));
+      }
+    }
+
+    const boxL = Math.round((width - boxW) / 2);
+    const boxT = Math.round((height - boxH) / 2);
+
+    cropBox.style.width = boxW + 'px';
+    cropBox.style.height = boxH + 'px';
+    cropBox.style.left = boxL + 'px';
+    cropBox.style.top = boxT + 'px';
+  }
+
+  function applyCropToImage() {
+    if (!resizeOriginalSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      const displayedW = cropOverlay.clientWidth;
+      const displayedH = cropOverlay.clientHeight;
+      if (displayedW === 0 || displayedH === 0) return;
+
+      const scaleX = img.width / displayedW;
+      const scaleY = img.height / displayedH;
+
+      const left = parseInt(cropBox.style.left) || 0;
+      const top = parseInt(cropBox.style.top) || 0;
+      const boxW = parseInt(cropBox.style.width) || displayedW;
+      const boxH = parseInt(cropBox.style.height) || displayedH;
+
+      const cropX = left * scaleX;
+      const cropY = top * scaleY;
+      const cropW = boxW * scaleX;
+      const cropH = boxH * scaleY;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = cropW;
+      canvas.height = cropH;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+      resizeOriginalSrc = canvas.toDataURL(formatSelect.value, 0.95);
+      previewImg.src = resizeOriginalSrc;
+      btnProcess.style.display = 'none';
+      btnDownloadAdjusted.style.display = 'block';
+
+      // Turn off crop overlay
+      isCropActive = false;
+      btnToggleCrop.classList.add('btn-secondary');
+      btnToggleCrop.classList.remove('btn-primary');
+      textToggleCrop.textContent = getTranslation(currentLanguage, 'btn_crop_enable');
+      cropOptions.style.display = 'none';
+      cropOverlay.style.display = 'none';
+
+      if (presetSelect.value === 'custom') {
+        widthInput.value = Math.round(cropW);
+        heightInput.value = Math.round(cropH);
+      }
+    };
+    img.src = resizeOriginalSrc;
+  }
+
+  // Draggable/Resizable Crop Box Logic
+  let isDragging = false;
+  let isResizing = false;
+  let currentHandle = null;
+  let startX, startY;
+  let startLeft, startTop, startWidth, startHeight;
+
+  cropBox.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('crop-handle')) {
+      isResizing = true;
+      currentHandle = e.target;
+    } else {
+      isDragging = true;
+    }
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = parseInt(cropBox.style.left) || 0;
+    startTop = parseInt(cropBox.style.top) || 0;
+    startWidth = parseInt(cropBox.style.width) || 0;
+    startHeight = parseInt(cropBox.style.height) || 0;
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging && !isResizing) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const overlayW = cropOverlay.clientWidth;
+    const overlayH = cropOverlay.clientHeight;
+
+    if (isDragging) {
+      let newLeft = startLeft + dx;
+      let newTop = startTop + dy;
+      newLeft = Math.max(0, Math.min(newLeft, overlayW - startWidth));
+      newTop = Math.max(0, Math.min(newTop, overlayH - startHeight));
+      cropBox.style.left = newLeft + 'px';
+      cropBox.style.top = newTop + 'px';
+    } else if (isResizing) {
+      let newLeft = startLeft;
+      let newTop = startTop;
+      let newWidth = startWidth;
+      let newHeight = startHeight;
+      const aspect = cropAspectRatio.value;
+
+      if (currentHandle.classList.contains('br')) {
+        newWidth = startWidth + dx;
+        newHeight = startHeight + dy;
+        if (aspect === '1:1') {
+          const side = Math.max(15, Math.min(newWidth, newHeight));
+          newWidth = newHeight = side;
+        } else if (aspect === '16:9') {
+          newHeight = newWidth * (9 / 16);
+        } else if (aspect === '4:3') {
+          newHeight = newWidth * (3 / 4);
+        }
+      } else if (currentHandle.classList.contains('bl')) {
+        newWidth = startWidth - dx;
+        newHeight = startHeight + dy;
+        if (aspect === '1:1') {
+          const side = Math.max(15, Math.min(newWidth, newHeight));
+          newWidth = newHeight = side;
+        } else if (aspect === '16:9') {
+          newHeight = newWidth * (9 / 16);
+        } else if (aspect === '4:3') {
+          newHeight = newWidth * (3 / 4);
+        }
+        newLeft = startLeft + (startWidth - newWidth);
+      } else if (currentHandle.classList.contains('tr')) {
+        newWidth = startWidth + dx;
+        newHeight = startHeight - dy;
+        if (aspect === '1:1') {
+          const side = Math.max(15, Math.min(newWidth, newHeight));
+          newWidth = newHeight = side;
+        } else if (aspect === '16:9') {
+          newHeight = newWidth * (9 / 16);
+        } else if (aspect === '4:3') {
+          newHeight = newWidth * (3 / 4);
+        }
+        newTop = startTop + (startHeight - newHeight);
+      } else if (currentHandle.classList.contains('tl')) {
+        newWidth = startWidth - dx;
+        newHeight = startHeight - dy;
+        if (aspect === '1:1') {
+          const side = Math.max(15, Math.min(newWidth, newHeight));
+          newWidth = newHeight = side;
+        } else if (aspect === '16:9') {
+          newHeight = newWidth * (9 / 16);
+        } else if (aspect === '4:3') {
+          newHeight = newWidth * (3 / 4);
+        }
+        newLeft = startLeft + (startWidth - newWidth);
+        newTop = startTop + (startHeight - newHeight);
+      }
+
+      if (newWidth > 15 && newHeight > 15 && newLeft >= 0 && newTop >= 0 && (newLeft + newWidth) <= overlayW && (newTop + newHeight) <= overlayH) {
+        cropBox.style.width = newWidth + 'px';
+        cropBox.style.height = newHeight + 'px';
+        cropBox.style.left = newLeft + 'px';
+        cropBox.style.top = newTop + 'px';
+      }
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    isResizing = false;
+    currentHandle = null;
+  });
+
   function loadResizeImage(file) {
     resizeFile = file;
     const reader = new FileReader();
@@ -533,8 +849,21 @@ function initResizePanel() {
       previewBox.style.display = 'block';
       emptyPreview.style.display = 'none';
       btnProcess.style.display = 'none';
+
+      // Reset values
+      resizeOpacity = 100;
+      opacityInput.value = 100;
+      opacityVal.textContent = '100%';
+      previewImg.style.opacity = 1;
+
+      isCropActive = false;
+      btnToggleCrop.classList.add('btn-secondary');
+      btnToggleCrop.classList.remove('btn-primary');
+      textToggleCrop.textContent = getTranslation(currentLanguage, 'btn_crop_enable');
+      cropOptions.style.display = 'none';
+      cropOverlay.style.display = 'none';
+      btnDownloadAdjusted.style.display = 'none';
       
-      // Auto-populate dimensions from image
       const img = new Image();
       img.onload = () => {
         if (presetSelect.value === 'custom') {
@@ -561,20 +890,17 @@ function initResizePanel() {
     btnResizeNow.disabled = true;
     btnResizeNow.textContent = getTranslation(currentLanguage, 'status_resizing');
 
-    // Perform live resize draw on canvas
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = w;
       canvas.height = h;
       const ctx = canvas.getContext('2d');
+      
+      ctx.globalAlpha = resizeOpacity / 100;
       ctx.drawImage(img, 0, 0, w, h);
       
-      const mime = format;
-      const extension = format.split('/')[1] || 'png';
-      resizedDataUrl = canvas.toDataURL(mime, q);
-
-      // Update Live Preview
+      resizedDataUrl = canvas.toDataURL(format, q);
       previewImg.src = resizedDataUrl;
       btnProcess.style.display = 'block';
       btnResizeNow.disabled = false;
