@@ -31,6 +31,7 @@ const bgTemplates = [
 
 // Initialize Extension Popup
 document.addEventListener('DOMContentLoaded', () => {
+  initLanguageSystem();
   initNavigation();
   initSettingsPanel();
   initResizePanel();
@@ -42,22 +43,120 @@ document.addEventListener('DOMContentLoaded', () => {
   initFullscreenMode();
 });
 
+// 1.5. LANGUAGE & TRANSLATION SYSTEM
+let currentLanguage = 'pt'; // default fallback
+
+function getTranslation(lang, key) {
+  if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+    return TRANSLATIONS[lang][key];
+  }
+  if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS['en'] && TRANSLATIONS['en'][key]) {
+    return TRANSLATIONS['en'][key];
+  }
+  return key;
+}
+
+function updateNavigationTitles() {
+  const activeNavItem = document.querySelector('.nav-item.active');
+  if (activeNavItem) {
+    const targetPanel = activeNavItem.getAttribute('data-target');
+    const screenTitle = document.getElementById('current-screen-title');
+    const screenSubtitle = document.getElementById('current-screen-subtitle');
+    
+    const titleKey = `header_${targetPanel.replace('panel-', '').replace('-', '_')}_title`;
+    const subKey = `header_${targetPanel.replace('panel-', '').replace('-', '_')}_sub`;
+    
+    if (screenTitle) screenTitle.textContent = getTranslation(currentLanguage, titleKey);
+    if (screenSubtitle) screenSubtitle.textContent = getTranslation(currentLanguage, subKey);
+  }
+}
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.set({ language: lang });
+  } else {
+    localStorage.setItem('language', lang);
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    if (btn.getAttribute('data-lang') === lang) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const translation = getTranslation(lang, key);
+    if (translation) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.value = translation;
+      } else {
+        el.textContent = translation;
+      }
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const translation = getTranslation(lang, key);
+    if (translation) {
+      el.placeholder = translation;
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    const translation = getTranslation(lang, key);
+    if (translation) {
+      el.title = translation;
+    }
+  });
+
+  updateUIForPlan();
+  updateNavigationTitles();
+  loadRecentEdits();
+}
+
+function initLanguageSystem() {
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const selectedLang = btn.getAttribute('data-lang');
+      setLanguage(selectedLang);
+    });
+  });
+
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get(['language'], (result) => {
+      if (result.language) {
+        setLanguage(result.language);
+      } else {
+        const browserLang = navigator.language.slice(0, 2).toLowerCase();
+        const supported = ['pt', 'en', 'fr', 'de', 'es'];
+        const defaultLang = supported.includes(browserLang) ? browserLang : 'pt';
+        setLanguage(defaultLang);
+      }
+    });
+  } else {
+    const savedLang = localStorage.getItem('language');
+    if (savedLang) {
+      setLanguage(savedLang);
+    } else {
+      const browserLang = navigator.language.slice(0, 2).toLowerCase();
+      const supported = ['pt', 'en', 'fr', 'de', 'es'];
+      const defaultLang = supported.includes(browserLang) ? browserLang : 'pt';
+      setLanguage(defaultLang);
+    }
+  }
+}
+
 // 2. NAVIGATION SYSTEM
 function initNavigation() {
   const navItems = document.querySelectorAll('.nav-item');
   const panels = document.querySelectorAll('.content-panel');
-  const screenTitle = document.getElementById('current-screen-title');
-  const screenSubtitle = document.getElementById('current-screen-subtitle');
-
-  const headers = {
-    'panel-dashboard': { title: 'Dashboard Overview', sub: 'Your subscription status and local activity stats' },
-    'panel-resize': { title: 'Image Resizer', sub: 'Drag and drop to resize and convert dimensions' },
-    'panel-remove-bg': { title: 'Smart Background Remover', sub: 'Isolate subject layers with AI segmentation' },
-    'panel-change-bg': { title: 'Background Replacer', sub: 'Place isolated subjects in studio templates' },
-    'panel-ai-studio': { title: 'AI Background Studio', sub: 'Describe and generate personalized backdrops' },
-    'panel-batch': { title: 'Batch Queue Processor', sub: 'Upload up to 100 images for automated processing' },
-    'panel-settings': { title: 'Configurações & Licença', sub: 'Gerencie temas, chaves de API e status de subscrição' }
-  };
 
   navItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -72,11 +171,7 @@ function initNavigation() {
       document.getElementById(targetPanel).classList.add('active');
 
       // Update header titles
-      const meta = headers[targetPanel];
-      if (meta) {
-        screenTitle.textContent = meta.title;
-        screenSubtitle.textContent = meta.sub;
-      }
+      updateNavigationTitles();
     });
   });
 
@@ -154,7 +249,7 @@ function initSettingsPanel() {
     const key = licenseKeyInput.value.trim();
     const host = licenseHostInput.value.trim();
     if (!key) {
-      alert('Por favor, introduza uma chave de licença');
+      alert(getTranslation(currentLanguage, 'alert_enter_license'));
       return;
     }
     if (host) {
@@ -165,7 +260,7 @@ function initSettingsPanel() {
 
   async function verifyKeyOnline(key) {
     btnActivate.disabled = true;
-    btnActivate.textContent = 'A verificar licença online...';
+    btnActivate.textContent = getTranslation(currentLanguage, 'status_verifying_license');
     try {
       const response = await fetch(`${apiHost}/api/license/verify`, {
         method: 'POST',
@@ -195,21 +290,21 @@ function initSettingsPanel() {
       // Update Account Card info
       ownerEl.textContent = data.name;
       emailEl.textContent = data.email;
-      planEl.textContent = data.plan;
-      expiresEl.textContent = data.expiresAt ? data.expiresAt : 'Never (Lifetime)';
+      planEl.textContent = getTranslation(currentLanguage, `plan_${data.plan.toLowerCase()}`);
+      expiresEl.textContent = data.expiresAt ? data.expiresAt : getTranslation(currentLanguage, 'settings_lic_lifetime');
       infoCard.style.display = 'block';
 
-      alert(`Sucesso! Licença ${data.plan} ativada.`);
+      alert(getTranslation(currentLanguage, 'alert_license_success').replace('{plan}', getTranslation(currentLanguage, `plan_${data.plan.toLowerCase()}`)));
     } catch (err) {
       console.error(err);
-      alert(`Erro de Licença: ${err.message}. A usar plano gratuito.`);
+      alert(getTranslation(currentLanguage, 'alert_license_error').replace('{error}', err.message));
       currentPlan = 'Free';
       activeLicense = null;
       updateUIForPlan();
       infoCard.style.display = 'none';
     } finally {
       btnActivate.disabled = false;
-      btnActivate.textContent = 'Verificar e Ativar Licença';
+      btnActivate.textContent = getTranslation(currentLanguage, 'btn_lic_activate');
     }
   }
 
@@ -300,11 +395,11 @@ function initSettingsPanel() {
     geminiApiKey = key;
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({ geminiApiKey: key }, () => {
-        alert('Chave API do Gemini guardada com sucesso!');
+        alert(getTranslation(currentLanguage, 'alert_gemini_saved'));
       });
     } else {
       localStorage.setItem('geminiApiKey', key);
-      alert('Chave API do Gemini guardada com sucesso!');
+      alert(getTranslation(currentLanguage, 'alert_gemini_saved'));
     }
   });
 }
@@ -316,9 +411,13 @@ function updateUIForPlan() {
   const dashUpgradeBtn = document.getElementById('dash-upgrade-btn');
   const dashExpiry = document.getElementById('dash-plan-expiry');
 
+  if (!badge) return; // Guard in case DOM not loaded yet
+
   badge.className = 'badge-plan ' + currentPlan.toLowerCase();
-  badge.textContent = `${currentPlan} Plan`;
-  dashPlanName.textContent = currentPlan;
+  
+  const planTranslation = getTranslation(currentLanguage, `plan_${currentPlan.toLowerCase()}`);
+  badge.textContent = getTranslation(currentLanguage, 'plan_badge_format').replace('{plan}', planTranslation);
+  dashPlanName.textContent = planTranslation;
 
   // Manage locks overlays
   const lockRm = document.getElementById('lock-remove-bg');
@@ -327,26 +426,32 @@ function updateUIForPlan() {
   const lockBatch = document.getElementById('lock-batch');
 
   if (currentPlan === 'Free') {
-    lockRm.style.display = 'flex';
-    lockChange.style.display = 'flex';
-    lockAI.style.display = 'flex';
-    lockBatch.style.display = 'flex';
-    dashUpgradeBtn.style.display = 'block';
-    dashExpiry.textContent = 'Unlimited resize access. Upgrade to unlock background remover.';
+    if (lockRm) lockRm.style.display = 'flex';
+    if (lockChange) lockChange.style.display = 'flex';
+    if (lockAI) lockAI.style.display = 'flex';
+    if (lockBatch) lockBatch.style.display = 'flex';
+    if (dashUpgradeBtn) {
+      dashUpgradeBtn.style.display = 'block';
+      dashUpgradeBtn.textContent = getTranslation(currentLanguage, 'dash_upgrade_btn_premium');
+    }
+    if (dashExpiry) dashExpiry.textContent = getTranslation(currentLanguage, 'dash_expiry_free');
   } else if (currentPlan === 'Premium') {
-    lockRm.style.display = 'none';
-    lockChange.style.display = 'none';
-    lockAI.style.display = 'flex';
-    lockBatch.style.display = 'flex';
-    dashUpgradeBtn.style.display = 'block';
-    dashExpiry.textContent = 'Premium active: unlimited background removal and templates.';
+    if (lockRm) lockRm.style.display = 'none';
+    if (lockChange) lockChange.style.display = 'none';
+    if (lockAI) lockAI.style.display = 'flex';
+    if (lockBatch) lockBatch.style.display = 'flex';
+    if (dashUpgradeBtn) {
+      dashUpgradeBtn.style.display = 'block';
+      dashUpgradeBtn.textContent = getTranslation(currentLanguage, 'dash_upgrade_btn_ultimate');
+    }
+    if (dashExpiry) dashExpiry.textContent = getTranslation(currentLanguage, 'dash_expiry_premium');
   } else if (currentPlan === 'Ultimate') {
-    lockRm.style.display = 'none';
-    lockChange.style.display = 'none';
-    lockAI.style.display = 'none';
-    lockBatch.style.display = 'none';
-    dashUpgradeBtn.style.display = 'none';
-    dashExpiry.textContent = 'Ultimate plan active: all AI studio & batch functions unlocked.';
+    if (lockRm) lockRm.style.display = 'none';
+    if (lockChange) lockChange.style.display = 'none';
+    if (lockAI) lockAI.style.display = 'none';
+    if (lockBatch) lockBatch.style.display = 'none';
+    if (dashUpgradeBtn) dashUpgradeBtn.style.display = 'none';
+    if (dashExpiry) dashExpiry.textContent = getTranslation(currentLanguage, 'dash_expiry_ultimate');
   }
 }
 
@@ -441,7 +546,7 @@ function initResizePanel() {
 
   btnResizeNow.addEventListener('click', () => {
     if (!resizeFile || !resizeOriginalSrc) {
-      alert('Por favor, faça o upload de uma imagem primeiro');
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
       return;
     }
 
@@ -451,7 +556,7 @@ function initResizePanel() {
     const q = parseFloat(qualityInput.value) / 100;
 
     btnResizeNow.disabled = true;
-    btnResizeNow.textContent = 'A redimensionar...';
+    btnResizeNow.textContent = getTranslation(currentLanguage, 'status_resizing');
 
     // Perform live resize draw on canvas
     const img = new Image();
@@ -470,14 +575,14 @@ function initResizePanel() {
       previewImg.src = resizedDataUrl;
       btnProcess.style.display = 'block';
       btnResizeNow.disabled = false;
-      btnResizeNow.textContent = 'Resize Image';
+      btnResizeNow.textContent = getTranslation(currentLanguage, 'btn_resize_now');
     };
     img.src = resizeOriginalSrc;
   });
 
   btnProcess.addEventListener('click', () => {
     if (!resizedDataUrl) {
-      alert('Por favor, clique em "Resize Image" primeiro');
+      alert(getTranslation(currentLanguage, 'alert_resize_first'));
       return;
     }
     const w = parseInt(widthInput.value) || 800;
@@ -573,12 +678,12 @@ function initRemoveBgPanel() {
 
   btnProcess.addEventListener('click', () => {
     if (!removeBgFile) {
-      alert('Please upload an image first');
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
       return;
     }
 
     btnProcess.disabled = true;
-    btnProcess.textContent = 'Removing background...';
+    btnProcess.textContent = getTranslation(currentLanguage, 'status_removing_bg');
 
     // Simulate smart AI object separation
     setTimeout(() => {
@@ -635,7 +740,7 @@ function initRemoveBgPanel() {
       img.src = imgBefore.src;
 
       btnProcess.disabled = false;
-      btnProcess.textContent = 'Remove Background';
+      btnProcess.textContent = getTranslation(currentLanguage, 'btn_rm_now');
     }, 1800);
   });
 
@@ -849,7 +954,7 @@ function initReplaceBgPanel() {
   btnDownload.addEventListener('click', () => {
     const canvas = document.getElementById('bg-composite-canvas');
     if (!changeBgSubject) {
-      alert('Please upload a transparent subject first');
+      alert(getTranslation(currentLanguage, 'alert_upload_subject_first'));
       return;
     }
     try {
@@ -858,7 +963,7 @@ function initReplaceBgPanel() {
       saveEditsHistory('BG Replace', 'Created studio composite', dataUrl);
     } catch (err) {
       console.error(err);
-      alert('Security Error: Failed to export composite canvas. Make sure background image is fully loaded with CORS allowed.');
+      alert(getTranslation(currentLanguage, 'alert_zip_security_error'));
     }
   });
 }
@@ -901,17 +1006,17 @@ function initAIStudioPanel() {
   btnOptimize.addEventListener('click', async () => {
     const promptText = promptInput.value.trim();
     if (!promptText) {
-      alert('Por favor, digite um prompt primeiro');
+      alert(getTranslation(currentLanguage, 'alert_prompt_first'));
       return;
     }
 
     if (!geminiApiKey) {
-      alert('Por favor, configure sua Gemini API Key nas Configurações para otimizar prompts!');
+      alert(getTranslation(currentLanguage, 'alert_api_key_required'));
       return;
     }
 
     btnOptimize.disabled = true;
-    btnOptimize.textContent = 'A otimizar com Gemini...';
+    btnOptimize.textContent = getTranslation(currentLanguage, 'status_optimizing_prompt');
 
     try {
       // 1. Fetch available models dynamically from the user's API Key
@@ -984,23 +1089,23 @@ function initAIStudioPanel() {
       if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         const enhancedPrompt = data.candidates[0].content.parts[0].text.trim();
         promptInput.value = enhancedPrompt;
-        alert('Prompt otimizado com sucesso pelo Gemini!');
+        alert(getTranslation(currentLanguage, 'status_optimizing_success'));
       } else {
-        alert('Não foi possível otimizar o prompt. Tente novamente.');
+        alert(getTranslation(currentLanguage, 'status_optimizing_fail'));
       }
     } catch (err) {
       console.error(err);
-      alert(`Erro ao otimizar prompt: ${err.message}`);
+      alert(getTranslation(currentLanguage, 'alert_generation_error').replace('{error}', err.message));
     } finally {
       btnOptimize.disabled = false;
-      btnOptimize.textContent = 'Optimize Prompt with Gemini';
+      btnOptimize.textContent = getTranslation(currentLanguage, 'btn_ai_optimize');
     }
   });
 
   btnGenerate.addEventListener('click', async () => {
     const promptText = promptInput.value.trim();
     if (!promptText) {
-      alert('Por favor, introduza um prompt primeiro');
+      alert(getTranslation(currentLanguage, 'alert_prompt_first'));
       return;
     }
 
@@ -1127,7 +1232,7 @@ function initAIStudioPanel() {
         }
       } catch (err) {
         console.error(err);
-        alert(`Erro de Geração Gemini: ${err.message}. A recorrer à demonstração local.`);
+        alert(getTranslation(currentLanguage, 'alert_generation_error').replace('{error}', err.message));
         generateDemoScene();
       } finally {
         btnGenerate.disabled = false;
@@ -1135,7 +1240,7 @@ function initAIStudioPanel() {
       }
     } else {
       // Fallback demo generation
-      alert('Demonstração: Chave API Gemini não configurada nas configurações. A gerar imagem simulada...');
+      alert(getTranslation(currentLanguage, 'alert_demo_mode'));
       setTimeout(() => {
         generateDemoScene();
         btnGenerate.disabled = false;
@@ -1244,7 +1349,7 @@ function initBatchPanel() {
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
       batchFiles = Array.from(e.target.files);
-      countLabel.textContent = `${batchFiles.length} files selected`;
+      countLabel.textContent = getTranslation(currentLanguage, 'batch_progress_status_ready').replace('{total}', batchFiles.length);
       btnProcess.disabled = false;
       emptyPreview.style.display = 'none';
       progressBox.style.display = 'block';
@@ -1284,7 +1389,7 @@ function initBatchPanel() {
         const badge = document.createElement('span');
         badge.className = 'batch-item-status-badge pending';
         badge.id = `batch-badge-${idx}`;
-        badge.textContent = 'Pendente';
+        badge.textContent = getTranslation(currentLanguage, 'batch_status_pending');
 
         row.appendChild(thumb);
         row.appendChild(info);
@@ -1294,7 +1399,7 @@ function initBatchPanel() {
 
       // Reset progress bar
       progressBar.style.width = '0%';
-      progressStatus.textContent = `Ready (0 of ${batchFiles.length} files)`;
+      progressStatus.textContent = getTranslation(currentLanguage, 'batch_progress_status_ready').replace('{total}', batchFiles.length);
     }
   });
 
@@ -1305,7 +1410,10 @@ function initBatchPanel() {
     btnDownloadZip.style.display = 'none';
 
     progressBar.style.width = '0%';
-    progressStatus.textContent = `0% (0 of ${batchFiles.length} files)`;
+    progressStatus.textContent = getTranslation(currentLanguage, 'batch_progress_status_active')
+      .replace('{percent}', 0)
+      .replace('{index}', 0)
+      .replace('{total}', batchFiles.length);
 
     const zip = new MiniZip();
     let index = 0;
@@ -1326,7 +1434,7 @@ function initBatchPanel() {
         batchProcessedZipData = new Blob([zipBuffer], { type: 'application/zip' });
         btnDownloadZip.style.display = 'block';
         btnProcess.disabled = false;
-        progressStatus.textContent = `Completed! Compiled ${batchFiles.length} images into ZIP.`;
+        progressStatus.textContent = getTranslation(currentLanguage, 'batch_progress_status_complete').replace('{total}', batchFiles.length);
         return;
       }
 
@@ -1334,7 +1442,7 @@ function initBatchPanel() {
       const badge = document.getElementById(`batch-badge-${index}`);
       if (badge) {
         badge.className = 'batch-item-status-badge processing';
-        badge.textContent = 'A processar';
+        badge.textContent = getTranslation(currentLanguage, 'batch_status_processing');
       }
 
       const file = batchFiles[index];
@@ -1433,21 +1541,24 @@ function initBatchPanel() {
           // Update row badge status to completed
           if (badge) {
             badge.className = 'batch-item-status-badge completed';
-            badge.textContent = 'Concluído';
+            badge.textContent = getTranslation(currentLanguage, 'batch_status_completed');
           }
 
           // Update Progress
           index++;
           const percent = Math.round((index / batchFiles.length) * 100);
           progressBar.style.width = `${percent}%`;
-          progressStatus.textContent = `${percent}% (${index} of ${batchFiles.length} files)`;
+          progressStatus.textContent = getTranslation(currentLanguage, 'batch_progress_status_active')
+            .replace('{percent}', percent)
+            .replace('{index}', index)
+            .replace('{total}', batchFiles.length);
 
           setTimeout(processNext, 150); // Small interval for smooth processing feedback
         };
         img.onerror = () => {
           if (badge) {
             badge.className = 'batch-item-status-badge error';
-            badge.textContent = 'Erro';
+            badge.textContent = getTranslation(currentLanguage, 'batch_status_error');
           }
           index++;
           processNext();
@@ -1471,10 +1582,11 @@ function initBatchPanel() {
 // 9. RECENT ACTIVITY LISTENER
 function loadRecentEdits() {
   const container = document.getElementById('dash-recent-list');
+  if (!container) return;
   if (recentEdits.length === 0) {
     container.innerHTML = `
       <div class="text-center" style="font-size: 11px; color: var(--color-text-secondary); margin: auto; padding: 20px;">
-        No images processed in this session yet.
+        ${getTranslation(currentLanguage, 'dash_recent_empty')}
       </div>
     `;
     return;

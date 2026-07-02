@@ -20,37 +20,37 @@
       <div class="nav-menu">
         <button class="nav-item active" data-target="panel-dashboard" id="nav-dashboard">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
-          <span class="tooltip">Dashboard</span>
+          <span class="tooltip" data-i18n="nav_dashboard">Dashboard Overview</span>
         </button>
         
         <button class="nav-item" data-target="panel-resize" id="nav-resize">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
-          <span class="tooltip">Resize Image</span>
+          <span class="tooltip" data-i18n="nav_resize">Resize Image</span>
         </button>
 
         <button class="nav-item" data-target="panel-remove-bg" id="nav-remove-bg">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-          <span class="tooltip">Remove BG</span>
+          <span class="tooltip" data-i18n="nav_remove_bg">Remove BG</span>
         </button>
 
         <button class="nav-item" data-target="panel-change-bg" id="nav-change-bg">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-          <span class="tooltip">Replace BG</span>
+          <span class="tooltip" data-i18n="nav_change_bg">Replace BG</span>
         </button>
 
         <button class="nav-item" data-target="panel-ai-studio" id="nav-ai-studio">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-          <span class="tooltip">AI Studio</span>
+          <span class="tooltip" data-i18n="nav_ai_studio">AI Studio</span>
         </button>
 
         <button class="nav-item" data-target="panel-batch" id="nav-batch">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          <span class="tooltip">Batch Processing</span>
+          <span class="tooltip" data-i18n="nav_batch">Batch Processing</span>
         </button>
 
         <button class="nav-item" data-target="panel-settings" id="nav-settings" style="margin-top: auto;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span class="tooltip">Configurações & Conta</span>
+          <span class="tooltip" data-i18n="nav_settings">Configurações & Conta</span>
         </button>
       </div>
     </nav>
@@ -61,14 +61,24 @@
       <!-- Top header bar -->
       <header class="top-header">
         <div class="header-title-group">
-          <h2 id="current-screen-title">Dashboard Overview</h2>
-          <p id="current-screen-subtitle">Your subscription profile and credentials</p>
+          <h2 id="current-screen-title" data-i18n="header_dashboard_title">Dashboard Overview</h2>
+          <p id="current-screen-subtitle" data-i18n="header_dashboard_sub">Your subscription profile and credentials</p>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
           <button class="btn btn-secondary" id="btn-maximize" style="padding: 6px 12px;" title="Open Fullscreen">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-            <span style="font-size:11px;">Fullscreen</span>
+            <span style="font-size:11px;" data-i18n="btn_maximize">Fullscreen</span>
           </button>
+          
+          <!-- Language Selector -->
+          <div class="lang-selector">
+            <span class="lang-btn" data-lang="pt" title="Português">PT</span>
+            <span class="lang-btn" data-lang="en" title="English">EN</span>
+            <span class="lang-btn" data-lang="fr" title="Français">FR</span>
+            <span class="lang-btn" data-lang="de" title="Deutsch">DE</span>
+            <span class="lang-btn" data-lang="es" title="Español">ES</span>
+          </div>
+
           <div class="badge-plan free" id="status-plan-badge">Free Plan</div>
         </div>
       </header>
@@ -77,32 +87,32 @@
       <div class="content-panel active" id="panel-dashboard">
         <div class="dashboard-grid">
           <div class="stats-card glass-card">
-            <h3 style="font-size: 14px; font-weight:600; margin-bottom:10px;">Subscription Overview</h3>
+            <h3 style="font-size: 14px; font-weight:600; margin-bottom:10px;" data-i18n="dash_card_title">Subscription Overview</h3>
             <div class="stats-row">
               <div class="stat-box">
-                <div class="stat-label">Active Plan</div>
+                <div class="stat-label" data-i18n="dash_label_plan">Active Plan</div>
                 <div class="stat-val" id="dash-plan-name" style="color: var(--color-text-primary);">Free</div>
               </div>
               <div class="stat-box">
-                <div class="stat-label">Verification API</div>
-                <div class="stat-val" id="dash-api-status" style="color: var(--color-success); font-size:14px; margin-top:8px;">Online</div>
+                <div class="stat-label" data-i18n="dash_label_api">Verification API</div>
+                <div class="stat-val" id="dash-api-status" style="color: var(--color-success); font-size:14px; margin-top:8px;" data-i18n="dash_api_online">Online</div>
               </div>
             </div>
             <div class="stat-box" style="margin-top: 10px;">
-              <div class="stat-label">Status Details</div>
+              <div class="stat-label" data-i18n="dash_label_status">Status Details</div>
               <div class="stat-val" id="dash-plan-expiry" style="font-size: 12px; color: var(--color-text-secondary); font-weight:normal; margin-top:4px;">
                 Unlimited resize access. Upgrade to unlock background remover.
               </div>
             </div>
-            <button class="btn btn-gradient-premium btn-block" id="dash-upgrade-btn" style="margin-top: 8px;">
+            <button class="btn btn-gradient-premium btn-block" id="dash-upgrade-btn" style="margin-top: 8px;" data-i18n="dash_upgrade_btn_premium">
               Upgrade to Premium
             </button>
           </div>
 
           <div class="stats-card glass-card" style="height: 100%; display: flex; flex-direction: column;">
-            <h3 style="font-size: 13px; font-weight:600; margin-bottom:8px;">Last Processed</h3>
+            <h3 style="font-size: 13px; font-weight:600; margin-bottom:8px;" data-i18n="dash_recent_title">Last Processed</h3>
             <div class="recent-edits" id="dash-recent-list" style="flex-grow: 1; overflow-y: auto;">
-              <div class="text-center" style="font-size: 11px; color: var(--color-text-secondary); margin: auto; padding: 20px;">
+              <div class="text-center" style="font-size: 11px; color: var(--color-text-secondary); margin: auto; padding: 20px;" data-i18n="dash_recent_empty">
                 No images processed in this session yet.
               </div>
             </div>
@@ -116,40 +126,40 @@
           <div class="sidebar-controls">
             
             <div class="control-group">
-              <span class="control-label">Upload Image</span>
+              <span class="control-label" data-i18n="resize_upload_title">Upload Image</span>
               <div class="dropzone" id="resize-dropzone">
                 <svg class="dropzone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <div class="dropzone-text">
-                  <h4>Drag & drop</h4>
-                  <p>PNG, JPG or WEBP</p>
+                  <h4 data-i18n="resize_dropzone_h4">Drag & drop</h4>
+                  <p data-i18n="resize_dropzone_p">PNG, JPG or WEBP</p>
                 </div>
                 <input type="file" id="resize-file-input" accept="image/*" style="display: none;">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Format Size</span>
+              <span class="control-label" data-i18n="resize_label_preset">Format Size</span>
               <select id="resize-preset-select">
-                <option value="custom">Custom Size</option>
-                <option value="instagram-post">Instagram Post (1080x1080)</option>
-                <option value="instagram-story">Instagram Story (1080x1920)</option>
-                <option value="facebook-cover">Facebook Cover (851x315)</option>
-                <option value="linkedin-banner">LinkedIn Banner (1584x396)</option>
-                <option value="marketplace">E-comm/Marketplace (800x800)</option>
-                <option value="website-banner">Website Banner (1920x1080)</option>
+                <option value="custom" data-i18n="resize_preset_custom">Custom Size</option>
+                <option value="instagram-post" data-i18n="resize_preset_insta_post">Instagram Post (1080x1080)</option>
+                <option value="instagram-story" data-i18n="resize_preset_insta_story">Instagram Story (1080x1920)</option>
+                <option value="facebook-cover" data-i18n="resize_preset_fb_cover">Facebook Cover (851x315)</option>
+                <option value="linkedin-banner" data-i18n="resize_preset_li_banner">LinkedIn Banner (1584x396)</option>
+                <option value="marketplace" data-i18n="resize_preset_market">E-comm/Marketplace (800x800)</option>
+                <option value="website-banner" data-i18n="resize_preset_web_banner">Website Banner (1920x1080)</option>
               </select>
             </div>
 
             <div class="control-group" id="resize-custom-dims">
-              <span class="control-label">Custom Dimensions (px)</span>
+              <span class="control-label" data-i18n="resize_label_dims">Custom Dimensions (px)</span>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <input type="number" id="resize-width" placeholder="Width" value="800">
-                <input type="number" id="resize-height" placeholder="Height" value="800">
+                <input type="number" id="resize-width" placeholder="Width" data-i18n-placeholder="resize_placeholder_width" value="800">
+                <input type="number" id="resize-height" placeholder="Height" data-i18n-placeholder="resize_placeholder_height" value="800">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Export Format</span>
+              <span class="control-label" data-i18n="resize_label_format">Export Format</span>
               <select id="resize-format-select">
                 <option value="image/png">PNG</option>
                 <option value="image/jpeg">JPG</option>
@@ -158,7 +168,7 @@
             </div>
 
             <div class="control-group">
-              <span class="control-label">Compression Quality</span>
+              <span class="control-label" data-i18n="resize_label_quality">Compression Quality</span>
               <div class="slider-group">
                 <input type="range" id="resize-quality" min="10" max="100" value="85">
                 <span class="slider-val" id="resize-quality-val">85%</span>
@@ -166,10 +176,10 @@
             </div>
 
             <div style="display:flex; flex-direction:column; gap:8px; margin-top:auto;">
-              <button class="btn btn-primary btn-block" id="btn-resize-now">
+              <button class="btn btn-primary btn-block" id="btn-resize-now" data-i18n="btn_resize_now">
                 Resize Image
               </button>
-              <button class="btn btn-gradient-premium btn-block" id="btn-resize-process" style="display: none;">
+              <button class="btn btn-gradient-premium btn-block" id="btn-resize-process" style="display: none;" data-i18n="btn_resize_download">
                 Download Resized
               </button>
             </div>
@@ -181,7 +191,7 @@
             </div>
             <div id="resize-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-              <p style="font-size: 12px;">Upload an image to see preview</p>
+              <p style="font-size: 12px;" data-i18n="resize_empty_preview">Upload an image to see preview</p>
             </div>
           </div>
         </div>
@@ -193,20 +203,20 @@
           <div class="lock-badge">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
-          <h3 class="lock-title">Unlock Background Removal</h3>
-          <p class="lock-desc">Isolate subjects instantly using premium smart AI object segmentation.</p>
-          <button class="btn btn-gradient-premium" id="btn-unlock-remove-bg">Enter License Key</button>
+          <h3 class="lock-title" data-i18n="lock_rm_title">Unlock Background Removal</h3>
+          <p class="lock-desc" data-i18n="lock_rm_desc">Isolate subjects instantly using premium smart AI object segmentation.</p>
+          <button class="btn btn-gradient-premium" id="btn-unlock-remove-bg" data-i18n="lock_rm_btn">Enter License Key</button>
         </div>
 
         <div class="editor-cols">
           <div class="sidebar-controls">
             <div class="control-group">
-              <span class="control-label">Upload Image</span>
+              <span class="control-label" data-i18n="rm_upload_title">Upload Image</span>
               <div class="dropzone" id="rm-dropzone">
                 <svg class="dropzone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <div class="dropzone-text">
-                  <h4>Drag & drop</h4>
-                  <p>PNG or JPG</p>
+                  <h4 data-i18n="resize_dropzone_h4">Drag & drop</h4>
+                  <p data-i18n="rm_dropzone_p">PNG or JPG</p>
                 </div>
                 <input type="file" id="rm-file-input" accept="image/*" style="display: none;">
               </div>
@@ -214,13 +224,13 @@
 
             <div class="success-banner" id="rm-success-banner" style="display: none;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              <span>Subject isolated successfully</span>
+              <span data-i18n="rm_success_banner">Subject isolated successfully</span>
             </div>
 
-            <button class="btn btn-primary btn-block" id="btn-rm-process" style="margin-top:auto;">
+            <button class="btn btn-primary btn-block" id="btn-rm-process" style="margin-top:auto;" data-i18n="btn_rm_now">
               Remove Background
             </button>
-            <button class="btn btn-secondary btn-block" id="btn-rm-download" style="display: none;">
+            <button class="btn btn-secondary btn-block" id="btn-rm-download" style="display: none;" data-i18n="btn_rm_download">
               Download transparent PNG
             </button>
           </div>
@@ -241,7 +251,7 @@
             </div>
             <div id="rm-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-              <p style="font-size: 12px;">Upload image to remove background</p>
+              <p style="font-size: 12px;" data-i18n="rm_empty_preview">Upload image to remove background</p>
             </div>
           </div>
         </div>
@@ -253,30 +263,30 @@
           <div class="lock-badge">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
-          <h3 class="lock-title">Unlock Premium Backgrounds</h3>
-          <p class="lock-desc">Instantly swap backgrounds with curated high-resolution scenes.</p>
-          <button class="btn btn-gradient-premium" id="btn-unlock-change-bg">Upgrade to Premium</button>
+          <h3 class="lock-title" data-i18n="lock_bg_title">Unlock Premium Backgrounds</h3>
+          <p class="lock-desc" data-i18n="lock_bg_desc">Instantly swap backgrounds with curated high-resolution scenes.</p>
+          <button class="btn btn-gradient-premium" id="btn-unlock-change-bg" data-i18n="lock_bg_btn">Upgrade to Premium</button>
         </div>
 
         <div class="editor-cols">
           <div class="sidebar-controls" style="overflow-y:auto; padding-right:4px;">
             <div class="control-group">
-              <span class="control-label">Upload Isolated Subject</span>
+              <span class="control-label" data-i18n="bg_upload_title">Upload Isolated Subject</span>
               <div class="dropzone" id="bg-dropzone" style="padding: 15px;">
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--color-text-secondary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <div class="dropzone-text">
-                  <h4 style="font-size:11px;">Select subject image</h4>
+                  <h4 style="font-size:11px;" data-i18n="bg_dropzone_p">Select subject image</h4>
                 </div>
                 <input type="file" id="bg-file-input" accept="image/*" style="display: none;">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Select Studio Backdrop</span>
+              <span class="control-label" data-i18n="bg_label_backdrop">Select Studio Backdrop</span>
               <div class="preset-grid" id="bg-preset-grid" style="margin-bottom: 8px;">
                 <!-- Preset backgrounds loaded dynamically -->
               </div>
-              <button class="btn btn-secondary btn-block" id="btn-upload-custom-bg" style="font-size: 11px; padding: 6px 12px;">
+              <button class="btn btn-secondary btn-block" id="btn-upload-custom-bg" style="font-size: 11px; padding: 6px 12px;" data-i18n="btn_upload_custom_bg">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 Upload Custom Background
               </button>
@@ -284,23 +294,23 @@
             </div>
 
             <div class="control-group">
-              <span class="control-label">AI Adaptation Adjustments</span>
+              <span class="control-label" data-i18n="bg_label_adjust">AI Adaptation Adjustments</span>
               <div class="control-group">
-                <span class="control-label" style="font-size: 10px; font-weight:normal;">Brightness</span>
+                <span class="control-label" style="font-size: 10px; font-weight:normal;" data-i18n="bg_label_brightness">Brightness</span>
                 <div class="slider-group">
                   <input type="range" id="bg-brightness" min="50" max="150" value="100">
                   <span class="slider-val" id="bg-brightness-val">100</span>
                 </div>
               </div>
               <div class="control-group">
-                <span class="control-label" style="font-size: 10px; font-weight:normal;">Contrast</span>
+                <span class="control-label" style="font-size: 10px; font-weight:normal;" data-i18n="bg_label_contrast">Contrast</span>
                 <div class="slider-group">
                   <input type="range" id="bg-contrast" min="50" max="150" value="100">
                   <span class="slider-val" id="bg-contrast-val">100</span>
                 </div>
               </div>
               <div class="control-group">
-                <span class="control-label" style="font-size: 10px; font-weight:normal;">Background Blur</span>
+                <span class="control-label" style="font-size: 10px; font-weight:normal;" data-i18n="bg_label_blur">Background Blur</span>
                 <div class="slider-group">
                   <input type="range" id="bg-blur" min="0" max="20" value="0">
                   <span class="slider-val" id="bg-blur-val">0px</span>
@@ -308,7 +318,7 @@
               </div>
             </div>
 
-            <button class="btn btn-primary btn-block" id="btn-bg-download" style="margin-top: 8px;">
+            <button class="btn btn-primary btn-block" id="btn-bg-download" style="margin-top: 8px;" data-i18n="btn_bg_download">
               Export Product Image
             </button>
           </div>
@@ -320,7 +330,7 @@
             </div>
             <div id="bg-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-              <p style="font-size: 12px;">Upload transparent subject to compose</p>
+              <p style="font-size: 12px;" data-i18n="bg_empty_preview">Upload transparent subject to compose</p>
             </div>
           </div>
         </div>
@@ -332,44 +342,44 @@
           <div class="lock-badge">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
-          <h3 class="lock-title">Unlock AI Background Studio</h3>
-          <p class="lock-desc">Generate stunning, customized context backgrounds using advanced prompts (Ultimate Plan).</p>
-          <button class="btn btn-gradient-premium" id="btn-unlock-ai-studio">Upgrade to Ultimate</button>
+          <h3 class="lock-title" data-i18n="lock_ai_title">Unlock AI Background Studio</h3>
+          <p class="lock-desc" data-i18n="lock_ai_desc">Generate stunning, customized context backgrounds using advanced prompts (Ultimate Plan).</p>
+          <button class="btn btn-gradient-premium" id="btn-unlock-ai-studio" data-i18n="lock_ai_btn">Upgrade to Ultimate</button>
         </div>
 
         <div class="editor-cols">
           <div class="sidebar-controls">
             <div class="control-group">
-              <span class="control-label">AI Category Style</span>
+              <span class="control-label" data-i18n="ai_label_style">AI Category Style</span>
               <select id="ai-category-select">
-                <option value="minimalist">Minimalist Studio</option>
-                <option value="office">Professional Office</option>
-                <option value="luxury">Luxury Podium / Marble</option>
-                <option value="nature">Outdoor Nature / Sunlight</option>
-                <option value="store">Rustic Store / Wooden Table</option>
-                <option value="technology">Futuristic Tech / Neon</option>
+                <option value="minimalist" data-i18n="ai_style_minimalist">Minimalist Studio</option>
+                <option value="office" data-i18n="ai_style_office">Professional Office</option>
+                <option value="luxury" data-i18n="ai_style_luxury">Luxury Podium / Marble</option>
+                <option value="nature" data-i18n="ai_style_nature">Outdoor Nature / Sunlight</option>
+                <option value="store" data-i18n="ai_style_store">Rustic Store / Wooden Table</option>
+                <option value="technology" data-i18n="ai_style_technology">Futuristic Tech / Neon</option>
               </select>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Custom AI Prompt</span>
-              <textarea id="ai-prompt-input" rows="3" style="width:100%; border-radius:10px; background:rgba(15,23,42,0.6); border:1px solid var(--color-border); padding:8px 12px; color:#fff; font-size:12px; outline:none; resize:none;" placeholder="A perfume bottle sitting on a sleek white marble platform, warm volumetric lighting, high realism..."></textarea>
-              <button class="btn btn-secondary btn-block" id="btn-ai-optimize-prompt" style="font-size: 11px; padding: 6px 12px; margin-top: 4px;">
+              <span class="control-label" data-i18n="ai_label_prompt">Custom AI Prompt</span>
+              <textarea id="ai-prompt-input" rows="3" style="width:100%; border-radius:10px; background:rgba(15,23,42,0.6); border:1px solid var(--color-border); padding:8px 12px; color:#fff; font-size:12px; outline:none; resize:none;" placeholder="A perfume bottle sitting on a sleek white marble platform, warm volumetric lighting, high realism..." data-i18n-placeholder="ai_prompt_placeholder"></textarea>
+              <button class="btn btn-secondary btn-block" id="btn-ai-optimize-prompt" style="font-size: 11px; padding: 6px 12px; margin-top: 4px;" data-i18n="btn_ai_optimize">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
                 Optimize Prompt with Gemini
               </button>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Resolution Output</span>
+              <span class="control-label" data-i18n="ai_label_res">Resolution Output</span>
               <select id="ai-res-select">
-                <option value="hd">HD Export (1024x1024)</option>
-                <option value="full-hd">Full HD (2048x2048)</option>
+                <option value="hd" data-i18n="ai_res_hd">HD Export (1024x1024)</option>
+                <option value="full-hd" data-i18n="ai_res_full_hd">Full HD (2048x2048)</option>
               </select>
             </div>
 
             <button class="btn btn-primary btn-block" id="btn-ai-generate" style="margin-top:auto;">
-              <span class="btn-text">Generate AI Scene</span>
+              <span class="btn-text" data-i18n="btn_ai_generate">Generate AI Scene</span>
               <span class="spinner" id="ai-spinner" style="display: none;"></span>
             </button>
           </div>
@@ -380,7 +390,7 @@
             </div>
             <div id="ai-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-              <p style="font-size: 12px;">Configure AI prompt to generate backgrounds</p>
+              <p style="font-size: 12px;" data-i18n="ai_empty_preview">Configure AI prompt to generate backgrounds</p>
             </div>
           </div>
         </div>
@@ -392,36 +402,36 @@
           <div class="lock-badge">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
-          <h3 class="lock-title">Unlock Batch Processing</h3>
-          <p class="lock-desc">Process up to 100 images simultaneously and download them in a single ZIP (Ultimate Plan).</p>
-          <button class="btn btn-gradient-premium" id="btn-unlock-batch">Upgrade to Ultimate</button>
+          <h3 class="lock-title" data-i18n="lock_batch_title">Unlock Batch Processing</h3>
+          <p class="lock-desc" data-i18n="lock_batch_desc">Process up to 100 images simultaneously and download them in a single ZIP (Ultimate Plan).</p>
+          <button class="btn btn-gradient-premium" id="btn-unlock-batch" data-i18n="lock_batch_btn">Upgrade to Ultimate</button>
         </div>
 
         <div class="editor-cols">
           <div class="sidebar-controls">
             <div class="control-group">
-              <span class="control-label">Select Files (Up to 100)</span>
+              <span class="control-label" data-i18n="batch_upload_title">Select Files (Up to 100)</span>
               <div class="dropzone" id="batch-dropzone">
                 <svg class="dropzone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V4a2 2 0 012-2h6l2 2h6a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
                 <div class="dropzone-text">
-                  <h4>Batch Upload</h4>
-                  <p id="batch-count-label">0 files selected</p>
+                  <h4 data-i18n="batch_dropzone_h4">Batch Upload</h4>
+                  <p id="batch-count-label" data-i18n="batch_dropzone_p">0 files selected</p>
                 </div>
                 <input type="file" id="batch-file-input" multiple accept="image/*" style="display: none;">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="control-label">Batch Operations</span>
+              <span class="control-label" data-i18n="batch_label_op">Batch Operations</span>
               <select id="batch-operation-select">
-                <option value="resize">Bulk Resize Only</option>
-                <option value="remove-bg">Bulk Remove BG + Resize</option>
+                <option value="resize" data-i18n="batch_op_resize">Bulk Resize Only</option>
+                <option value="remove-bg" data-i18n="batch_op_remove_bg">Bulk Remove BG + Resize</option>
               </select>
             </div>
 
             <!-- Premium Batch Settings -->
             <div class="control-group" id="batch-premium-options">
-              <span class="control-label">Batch Resize Size (px)</span>
+              <span class="control-label" data-i18n="batch_label_size">Batch Resize Size (px)</span>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <input type="number" id="batch-width" placeholder="Width" value="800">
                 <input type="number" id="batch-height" placeholder="Height" value="800">
@@ -429,18 +439,18 @@
             </div>
 
             <div class="control-group">
-              <span class="control-label">Batch Background Fill</span>
+              <span class="control-label" data-i18n="batch_label_fill">Batch Background Fill</span>
               <select id="batch-bg-fill-select">
-                <option value="transparent">Transparent (PNG/WEBP)</option>
-                <option value="white">Solid White</option>
-                <option value="black">Solid Black</option>
-                <option value="custom">Custom Color</option>
+                <option value="transparent" data-i18n="batch_fill_transparent">Transparent (PNG/WEBP)</option>
+                <option value="white" data-i18n="batch_fill_white">Solid White</option>
+                <option value="black" data-i18n="batch_fill_black">Solid Black</option>
+                <option value="custom" data-i18n="batch_fill_custom">Custom Color</option>
               </select>
-              <input type="text" id="batch-bg-fill-custom" placeholder="#FFFFFF" style="display: none; margin-top: 4px; font-family: monospace;">
+              <input type="text" id="batch-bg-fill-custom" placeholder="#FFFFFF" style="display: none; margin-top: 4px; font-family: monospace;" data-i18n-placeholder="batch_fill_custom_placeholder">
             </div>
 
             <div class="control-group">
-              <span class="control-label">Batch Export Format</span>
+              <span class="control-label" data-i18n="batch_label_format">Batch Export Format</span>
               <select id="batch-format-select">
                 <option value="image/png">PNG</option>
                 <option value="image/jpeg">JPG</option>
@@ -449,14 +459,14 @@
             </div>
 
             <div class="control-group">
-              <span class="control-label">Batch Export Quality</span>
+              <span class="control-label" data-i18n="batch_label_quality">Batch Export Quality</span>
               <div class="slider-group">
                 <input type="range" id="batch-quality" min="10" max="100" value="85">
                 <span class="slider-val" id="batch-quality-val">85%</span>
               </div>
             </div>
 
-            <button class="btn btn-primary btn-block" id="btn-batch-process" style="margin-top:12px;" disabled>
+            <button class="btn btn-primary btn-block" id="btn-batch-process" style="margin-top:12px;" disabled data-i18n="btn_batch_process">
               Process Batch List
             </button>
           </div>
@@ -464,11 +474,11 @@
           <div class="preview-window" style="flex-direction:column; padding: 20px;">
             <div id="batch-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <p style="font-size: 12px;">Queue files to see batch summary</p>
+              <p style="font-size: 12px;" data-i18n="batch_empty_preview">Queue files to see batch summary</p>
             </div>
 
             <div id="batch-progress-box" style="display:none; width: 100%;">
-              <h4 style="font-size: 13px; font-weight:600; margin-bottom:12px;">Processing Batch Queue...</h4>
+              <h4 style="font-size: 13px; font-weight:600; margin-bottom:12px;" data-i18n="batch_progress_title">Processing Batch Queue...</h4>
               <div style="background-color:#334155; height:6px; border-radius:3px; width:100%; margin-bottom:8px; overflow:hidden;">
                 <div id="batch-progress-bar" style="background:var(--color-primary); height:100%; width:0%; transition:width 0.2s;"></div>
               </div>
@@ -478,7 +488,7 @@
                 <!-- Dynamically loaded list of files being processed -->
               </div>
               
-              <button class="btn btn-primary btn-block" id="btn-batch-download-zip" style="margin-top:16px; display:none;">
+              <button class="btn btn-primary btn-block" id="btn-batch-download-zip" style="margin-top:16px; display:none;" data-i18n="btn_batch_download">
                 Download ZIP Archive
               </button>
             </div>
@@ -494,15 +504,15 @@
           <div class="stats-card glass-card">
             <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
               <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.02 12.02l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path></svg>
-              <span>Aparência & Tema</span>
+              <span data-i18n="settings_theme_title">Aparência & Tema</span>
             </h3>
-            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Escolha a aparência visual que melhor se adapta ao seu fluxo de trabalho.</p>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;" data-i18n="settings_theme_desc">Escolha a aparência visual que melhor se adapta ao seu fluxo de trabalho.</p>
             
             <div style="display: flex; gap: 12px;">
-              <button class="btn btn-secondary" id="btn-theme-dark" style="flex: 1; gap: 6px;">
+              <button class="btn btn-secondary" id="btn-theme-dark" style="flex: 1; gap: 6px;" data-i18n="btn_theme_dark">
                 🌙 Escuro
               </button>
-              <button class="btn btn-secondary" id="btn-theme-light" style="flex: 1; gap: 6px;">
+              <button class="btn btn-secondary" id="btn-theme-light" style="flex: 1; gap: 6px;" data-i18n="btn_theme_light">
                 ☀️ Claro
               </button>
             </div>
@@ -512,15 +522,15 @@
           <div class="stats-card glass-card">
             <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
               <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l.707-.707m2.828 9.9a5 5 0 1 1 5.656 0M9 21h6"></path></svg>
-              <span>Integração Google Gemini API</span>
+              <span data-i18n="settings_gemini_title">Integração Google Gemini API</span>
             </h3>
-            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Introduza a sua chave API do Gemini para ativar a inteligência artificial Imagen 3 no AI Studio.</p>
-            <p style="font-size:11px; color:var(--color-warning); margin-top:-6px; margin-bottom:12px; line-height:1.4;">
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;" data-i18n="settings_gemini_desc">Introduza a sua chave API do Gemini para ativar a inteligência artificial Imagen 3 no AI Studio.</p>
+            <p style="font-size:11px; color:var(--color-warning); margin-top:-6px; margin-bottom:12px; line-height:1.4;" data-i18n="settings_gemini_note">
               Nota : A funcionalidade google gemini ia sõ funciona com api com conta de faturamento, caso contrario da erro.
             </p>
             
             <div class="control-group">
-              <span class="control-label">Gemini API Key</span>
+              <span class="control-label" data-i18n="settings_gemini_label">Gemini API Key</span>
               <div style="display: flex; gap: 8px;">
                 <input type="password" id="gemini-api-key-input" placeholder="AIzaSy..." style="font-family:monospace; font-size:13px; flex-grow: 1;">
                 <button class="btn btn-secondary" id="btn-toggle-gemini-key" style="padding: 0 12px;" title="Mostrar/Ocultar Chave">👁️</button>
@@ -528,10 +538,10 @@
             </div>
 
             <div style="display: flex; gap: 8px; margin-top: 10px;">
-              <button class="btn btn-primary" id="btn-save-gemini-key" style="flex: 1;">
+              <button class="btn btn-primary" id="btn-save-gemini-key" style="flex: 1;" data-i18n="btn_save_gemini">
                 Salvar Chave API
               </button>
-              <a class="btn btn-secondary" href="https://aistudio.google.com/" target="_blank" style="text-decoration: none;">
+              <a class="btn btn-secondary" href="https://aistudio.google.com/" target="_blank" style="text-decoration: none;" data-i18n="btn_get_free_key">
                 Obter Chave Grátis
               </a>
             </div>
@@ -541,15 +551,15 @@
           <div class="stats-card glass-card">
             <h3 style="font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;">
               <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-              <span>Website & Suporte</span>
+              <span data-i18n="settings_support_title">Website & Suporte</span>
             </h3>
-            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Aceda ao portal web oficial da extensão para gerir subscrições, comprar créditos ou ver tutoriais.</p>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;" data-i18n="settings_support_desc">Aceda ao portal web oficial da extensão para gerir subscrições, comprar créditos ou ver tutoriais.</p>
             
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <a class="btn btn-gradient-premium" href="https://resizeimagebackgroundremover.alwaysdata.net" target="_blank" style="text-decoration: none; width: 100%;">
+              <a class="btn btn-gradient-premium" href="https://resizeimagebackgroundremover.alwaysdata.net" target="_blank" style="text-decoration: none; width: 100%;" data-i18n="btn_go_portal">
                 Aceder ao Portal Oficial
               </a>
-              <a class="btn btn-secondary" href="https://resizeimagebackgroundremover.alwaysdata.net/#pricing" target="_blank" style="text-decoration: none; width: 100%;">
+              <a class="btn btn-secondary" href="https://resizeimagebackgroundremover.alwaysdata.net/#pricing" target="_blank" style="text-decoration: none; width: 100%;" data-i18n="btn_view_plans">
                 Ver Planos de Subscrição
               </a>
             </div>
@@ -557,8 +567,8 @@
 
           <!-- Licensing Status Card -->
           <div class="stats-card glass-card">
-            <h3 style="font-size:14px; font-weight:600;">Licença Premium da Extensão</h3>
-            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;">Ative a sua licença comprada no site para desbloquear todos os recursos offline.</p>
+            <h3 style="font-size:14px; font-weight:600;" data-i18n="settings_lic_title">Licença Premium da Extensão</h3>
+            <p style="font-size:11px; color:var(--color-text-secondary); margin-bottom:12px;" data-i18n="settings_lic_desc">Ative a sua licença comprada no site para desbloquear todos os recursos offline.</p>
             
             <div class="control-group">
               <span class="control-label">License Key</span>
@@ -570,7 +580,7 @@
               <input type="text" id="license-host-input" value="https://resizeimagebackgroundremover.alwaysdata.net" style="font-size:12px;">
             </div>
 
-            <button class="btn btn-primary" id="btn-license-activate" style="margin-top:12px;">
+            <button class="btn btn-primary" id="btn-license-activate" style="margin-top:12px;" data-i18n="btn_lic_activate">
               Verificar e Ativar Licença
             </button>
           </div>
@@ -579,24 +589,24 @@
           <div class="stats-card glass-card" id="license-info-card" style="display:none;">
             <h3 style="font-size:13px; font-weight:600; color:var(--color-success); display:flex; align-items:center; gap:6px;">
               <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              <span>Licença Premium Ativa</span>
+              <span data-i18n="settings_lic_active_title">Licença Premium Ativa</span>
             </h3>
             
             <div style="display:flex; flex-direction:column; gap:8px; font-size:12px; margin-top:8px;">
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Cliente:</span>
+                <span style="color:var(--color-text-secondary)" data-i18n="settings_lic_customer">Cliente:</span>
                 <span id="lic-owner" style="font-weight:600;">John Doe</span>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Email Registado:</span>
+                <span style="color:var(--color-text-secondary)" data-i18n="settings_lic_email">Email Registado:</span>
                 <span id="lic-email" style="font-weight:600;">john@example.com</span>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border); padding-bottom:6px;">
-                <span style="color:var(--color-text-secondary)">Plano Ativado:</span>
+                <span style="color:var(--color-text-secondary)" data-i18n="settings_lic_plan">Plano Ativado:</span>
                 <span id="lic-plan" style="font-weight:700; color:var(--color-primary);">Premium</span>
               </div>
               <div style="display:flex; justify-content:space-between; padding-bottom:2px;">
-                <span style="color:var(--color-text-secondary)">Validade:</span>
+                <span style="color:var(--color-text-secondary)" data-i18n="settings_lic_validity">Validade:</span>
                 <span id="lic-expires" style="font-weight:600;">Never (Lifetime)</span>
               </div>
             </div>
@@ -609,6 +619,7 @@
 
   <!-- Load JSZIP library locally or mock zip export to prevent remote dependency issues. 
        We bundle a tiny standalone mock JSZip in popup.js or load standard JSZip code inside popup.js directly! -->
+  <script src="translations.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
