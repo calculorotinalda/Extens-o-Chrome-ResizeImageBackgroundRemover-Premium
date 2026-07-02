@@ -9,6 +9,7 @@ Uma extensão premium para navegadores que permite redimensionar imagens, remove
 | Funcionalidade / Funcionalidades | Plano Free (Gratuito) | Plano Premium | Plano Ultimate (Ilimitado) |
 | :--- | :---: | :---: | :---: |
 | **Redimensionador de Imagens** | ✅ Ilimitado | ✅ Ilimitado | ✅ Ilimitado |
+| **Conversão de Ficheiros (PNG/JPG para JPG/PNG/WEBP/HTML/PDF)** | ✅ Sim | ✅ Sim | ✅ Sim |
 | **Predefinições de Redes Sociais** | ✅ Sim | ✅ Sim | ✅ Sim |
 | **Ajuste de Formato & Qualidade** | ✅ Sim | ✅ Sim | ✅ Sim |
 | **Removedor de Fundo (AI)** | ❌ Bloqueado | ✅ Ilimitado | ✅ Ilimitado |
@@ -28,6 +29,11 @@ O plano padrão disponível imediatamente após a instalação da extensão, sem
 * **Descrição**: Acesso total às ferramentas básicas de redimensionamento e exportação rápida no navegador.
 * **Funcionalidades Incluídas**:
   * **Image Resizer (Redimensionador)**: Arraste e solte imagens para alterar dimensões.
+  * **Conversão de Ficheiros (File Converter)**: Conversão offline instantânea suportando:
+    * PNG TO JPG / JPG TO PNG
+    * PNG TO WEBP / JPG TO WEBP
+    * PNG TO HTML / JPG TO HTML (Imagem embutida em página interativa autónoma)
+    * PNG TO PDF / JPG TO PDF (Documento PDF de alta definição compilado localmente)
   * **Predefinições de Tamanho (Presets)**: Configuração rápida para dimensões de plataformas populares como:
     * Instagram Post (1080x1080)
     * Instagram Story (1080x1920)

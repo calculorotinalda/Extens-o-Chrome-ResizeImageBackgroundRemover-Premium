@@ -9,6 +9,8 @@ let geminiApiKey = '';
 
 // Image Files Cache
 let resizeFile = null;
+let convertFile = null;
+let convertedDataUrl = null;
 let removeBgFile = null;
 let changeBgSubject = null;
 let changeBgTemplate = null;
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initSettingsPanel();
   initResizePanel();
+  initConvertPanel();
   initRemoveBgPanel();
   initReplaceBgPanel();
   initAIStudioPanel();
@@ -605,6 +608,394 @@ function getPresetDimensions(preset) {
     case 'website-banner': return [1920, 1080];
     default: return [800, 800];
   }
+}
+
+// 4.5. FILE CONVERSION FEATURE (Free)
+function initConvertPanel() {
+  const dropzone = document.getElementById('convert-dropzone');
+  const fileInput = document.getElementById('convert-file-input');
+  const typeSelect = document.getElementById('convert-type-select');
+  const btnConvertNow = document.getElementById('btn-convert-now');
+  const btnDownload = document.getElementById('btn-convert-download');
+  const previewBox = document.getElementById('convert-preview-box');
+  const previewImg = document.getElementById('convert-preview-img');
+  const previewDoc = document.getElementById('convert-preview-doc');
+  const docIcon = document.getElementById('convert-doc-icon');
+  const docName = document.getElementById('convert-doc-name');
+  const docInfo = document.getElementById('convert-doc-info');
+  const emptyPreview = document.getElementById('convert-empty-preview');
+
+  let originalSrc = null;
+
+  function cleanupConvertedUrl() {
+    if (convertedDataUrl && convertedDataUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(convertedDataUrl);
+      convertedDataUrl = null;
+    }
+  }
+
+  // Trigger File Input Click
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  // Drag and Drop triggers
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      loadConvertImage(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      loadConvertImage(e.target.files[0]);
+    }
+  });
+
+  typeSelect.addEventListener('change', () => {
+    btnDownload.style.display = 'none';
+  });
+
+  function loadConvertImage(file) {
+    cleanupConvertedUrl();
+    convertFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      originalSrc = e.target.result;
+      
+      const fileName = file.name.toLowerCase();
+      if (fileName.endsWith('.png')) {
+        if (!typeSelect.value.startsWith('png-to-')) {
+          typeSelect.value = 'png-to-jpg';
+        }
+      } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+        if (!typeSelect.value.startsWith('jpg-to-')) {
+          typeSelect.value = 'jpg-to-png';
+        }
+      }
+
+      previewBox.style.display = 'none';
+      previewImg.style.display = 'none';
+      previewDoc.style.display = 'none';
+      emptyPreview.style.display = 'block';
+      btnDownload.style.display = 'none';
+      btnConvertNow.disabled = false;
+      btnConvertNow.textContent = getTranslation(currentLanguage, 'btn_convert_now');
+      
+      previewImg.src = originalSrc;
+      previewImg.style.display = 'block';
+      previewBox.style.display = 'flex';
+      emptyPreview.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  btnConvertNow.addEventListener('click', () => {
+    if (!convertFile || !originalSrc) {
+      alert(getTranslation(currentLanguage, 'alert_upload_first'));
+      return;
+    }
+
+    const conversionType = typeSelect.value;
+    const isPng = convertFile.name.toLowerCase().endsWith('.png');
+    const isJpg = convertFile.name.toLowerCase().endsWith('.jpg') || convertFile.name.toLowerCase().endsWith('.jpeg');
+    
+    if (conversionType.startsWith('png-to-') && !isPng) {
+      alert(currentLanguage === 'pt' ? 'Por favor, selecione um arquivo PNG para este tipo de conversão.' : 'Please select a PNG file for this conversion type.');
+      return;
+    }
+    if (conversionType.startsWith('jpg-to-') && !isJpg) {
+      alert(currentLanguage === 'pt' ? 'Por favor, selecione um arquivo JPG/JPEG para este tipo de conversão.' : 'Please select a JPG/JPEG file for this conversion type.');
+      return;
+    }
+
+    btnConvertNow.disabled = true;
+    btnConvertNow.textContent = getTranslation(currentLanguage, 'alert_converting');
+
+    const img = new Image();
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
+
+      cleanupConvertedUrl();
+
+      if (conversionType.endsWith('-to-jpg') || conversionType.endsWith('-to-png') || conversionType.endsWith('-to-webp')) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        
+        if (conversionType.endsWith('-to-jpg')) {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, width, height);
+        }
+
+        ctx.drawImage(img, 0, 0);
+
+        let mimeType = 'image/png';
+        let extension = 'png';
+        if (conversionType.endsWith('-to-jpg')) {
+          mimeType = 'image/jpeg';
+          extension = 'jpg';
+        } else if (conversionType.endsWith('-to-webp')) {
+          mimeType = 'image/webp';
+          extension = 'webp';
+        }
+
+        convertedDataUrl = canvas.toDataURL(mimeType, 0.95);
+
+        previewImg.src = convertedDataUrl;
+        previewImg.style.display = 'block';
+        previewDoc.style.display = 'none';
+        previewBox.style.display = 'flex';
+        emptyPreview.style.display = 'none';
+
+        btnConvertNow.disabled = false;
+        btnConvertNow.textContent = getTranslation(currentLanguage, 'btn_convert_now');
+        btnDownload.style.display = 'block';
+      } 
+      else if (conversionType.endsWith('-to-html')) {
+        const htmlTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Image Editor - Converted Image</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #fff;
+    }
+    .container {
+      background: rgba(30, 41, 59, 0.7);
+      padding: 32px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 90vw;
+      backdrop-filter: blur(12px);
+    }
+    img {
+      max-width: 100%;
+      max-height: 65vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      background-image: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%);
+      background-position: 0 0, 10px 10px;
+      background-size: 20px 20px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .meta {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="${originalSrc}" alt="Converted Image">
+    <h1>Converted Image</h1>
+    <div class="meta">${width} x ${height} px | ${convertFile.type}</div>
+    <a href="${originalSrc}" download="image.${isPng ? 'png' : 'jpg'}" class="btn">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      Download Image
+    </a>
+  </div>
+</body>
+</html>`;
+
+        const htmlBlob = new Blob([htmlTemplate], { type: 'text/html' });
+        convertedDataUrl = URL.createObjectURL(htmlBlob);
+
+        previewImg.style.display = 'none';
+        previewDoc.style.display = 'block';
+        previewBox.style.display = 'flex';
+        emptyPreview.style.display = 'none';
+
+        docIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>';
+        docName.textContent = convertFile.name.substring(0, convertFile.name.lastIndexOf('.')) + '.html';
+        docInfo.textContent = `${(htmlBlob.size / 1024).toFixed(1)} KB | HTML Webpage`;
+
+        btnConvertNow.disabled = false;
+        btnConvertNow.textContent = getTranslation(currentLanguage, 'btn_convert_now');
+        btnDownload.style.display = 'block';
+      }
+      else if (conversionType.endsWith('-to-pdf')) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0);
+
+        const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        const base64Data = jpegDataUrl.split(',')[1];
+        
+        try {
+          const pdfBlob = generatePDFFromJPEG(base64Data, width, height);
+          convertedDataUrl = URL.createObjectURL(pdfBlob);
+
+          previewImg.style.display = 'none';
+          previewDoc.style.display = 'block';
+          previewBox.style.display = 'flex';
+          emptyPreview.style.display = 'none';
+
+          docIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 9h1.5m1 0H13m-3.5 4h3m-3 4h3.5"></path>';
+          docName.textContent = convertFile.name.substring(0, convertFile.name.lastIndexOf('.')) + '.pdf';
+          docInfo.textContent = `${(pdfBlob.size / 1024).toFixed(1)} KB | PDF Document`;
+
+          btnConvertNow.disabled = false;
+          btnConvertNow.textContent = getTranslation(currentLanguage, 'btn_convert_now');
+          btnDownload.style.display = 'block';
+        } catch (err) {
+          console.error(err);
+          alert(getTranslation(currentLanguage, 'alert_convert_error'));
+          btnConvertNow.disabled = false;
+          btnConvertNow.textContent = getTranslation(currentLanguage, 'btn_convert_now');
+        }
+      }
+    };
+    img.src = originalSrc;
+  });
+
+  btnDownload.addEventListener('click', () => {
+    if (!convertedDataUrl) return;
+
+    const conversionType = typeSelect.value;
+    const baseName = convertFile.name.substring(0, convertFile.name.lastIndexOf('.'));
+    let outName = `${baseName}.png`;
+    
+    if (conversionType.endsWith('-to-jpg')) {
+      outName = `${baseName}.jpg`;
+    } else if (conversionType.endsWith('-to-webp')) {
+      outName = `${baseName}.webp`;
+    } else if (conversionType.endsWith('-to-html')) {
+      outName = `${baseName}.html`;
+    } else if (conversionType.endsWith('-to-pdf')) {
+      outName = `${baseName}.pdf`;
+    }
+
+    triggerDownload(convertedDataUrl, outName);
+    saveEditsHistory('Convert', `${conversionType.toUpperCase().replace('-', ' ')}`, (conversionType.endsWith('-to-html') || conversionType.endsWith('-to-pdf')) ? null : convertedDataUrl);
+  });
+}
+
+function generatePDFFromJPEG(jpegBase64, width, height) {
+  const raw = window.atob(jpegBase64);
+  const rawLength = raw.length;
+  const imgArray = new Uint8Array(new ArrayBuffer(rawLength));
+  for (let i = 0; i < rawLength; i++) {
+    imgArray[i] = raw.charCodeAt(i);
+  }
+
+  const wPoints = width * 0.75;
+  const hPoints = height * 0.75;
+
+  const header = "%PDF-1.4\r\n";
+  const obj1 = "1 0 obj\r\n<< /Type /Catalog /Pages 2 0 R >>\r\nendobj\r\n";
+  const obj2 = "2 0 obj\r\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\r\nendobj\r\n";
+  const obj3 = `3 0 obj\r\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${wPoints.toFixed(2)} ${hPoints.toFixed(2)}] /Resources << /XObject << /Im1 4 0 R >> /ProcSet [ /PDF /ImageB /ImageC ] >> /Contents 5 0 R >>\r\nendobj\r\n`;
+  const obj4Header = `4 0 obj\r\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imgArray.length} >>\r\nstream\r\n`;
+  const obj4Footer = "\r\nendstream\r\nendobj\r\n";
+  const contentStream = `q\r\n${wPoints.toFixed(2)} 0 0 ${hPoints.toFixed(2)} 0 0 cm\r\n/Im1 Do\r\nQ\r\n`;
+  const obj5 = `5 0 obj\r\n<< /Length ${contentStream.length} >>\r\nstream\r\n${contentStream}endstream\r\nendobj\r\n`;
+
+  const encoder = new TextEncoder();
+  const headerBytes = encoder.encode(header);
+  const obj1Bytes = encoder.encode(obj1);
+  const obj2Bytes = encoder.encode(obj2);
+  const obj3Bytes = encoder.encode(obj3);
+  const obj4HeaderBytes = encoder.encode(obj4Header);
+  const obj4FooterBytes = encoder.encode(obj4Footer);
+  const obj5Bytes = encoder.encode(obj5);
+
+  const offsets = [];
+  let currentOffset = headerBytes.length;
+
+  offsets.push(currentOffset);
+  currentOffset += obj1Bytes.length;
+
+  offsets.push(currentOffset);
+  currentOffset += obj2Bytes.length;
+
+  offsets.push(currentOffset);
+  currentOffset += obj3Bytes.length;
+
+  offsets.push(currentOffset);
+  currentOffset += obj4HeaderBytes.length + imgArray.length + obj4FooterBytes.length;
+
+  offsets.push(currentOffset);
+  currentOffset += obj5Bytes.length;
+
+  let xref = `xref\r\n0 6\r\n0000000000 65535 f\r\n`;
+  for (let i = 0; i < offsets.length; i++) {
+    const offStr = String(offsets[i]).padStart(10, '0');
+    xref += `${offStr} 00000 n\r\n`;
+  }
+  
+  const startXref = currentOffset;
+  const trailer = `trailer\r\n<< /Size 6 /Root 1 0 R >>\r\nstartxref\r\n${startXref}\r\n%%EOF\r\n`;
+  
+  const xrefBytes = encoder.encode(xref);
+  const trailerBytes = encoder.encode(trailer);
+
+  const totalLength = currentOffset + xrefBytes.length + trailerBytes.length;
+  const pdfBytes = new Uint8Array(totalLength);
+  
+  let ptr = 0;
+  pdfBytes.set(headerBytes, ptr); ptr += headerBytes.length;
+  pdfBytes.set(obj1Bytes, ptr); ptr += obj1Bytes.length;
+  pdfBytes.set(obj2Bytes, ptr); ptr += obj2Bytes.length;
+  pdfBytes.set(obj3Bytes, ptr); ptr += obj3Bytes.length;
+  
+  pdfBytes.set(obj4HeaderBytes, ptr); ptr += obj4HeaderBytes.length;
+  pdfBytes.set(imgArray, ptr); ptr += imgArray.length;
+  pdfBytes.set(obj4FooterBytes, ptr); ptr += obj4FooterBytes.length;
+  
+  pdfBytes.set(obj5Bytes, ptr); ptr += obj5Bytes.length;
+  
+  pdfBytes.set(xrefBytes, ptr); ptr += xrefBytes.length;
+  pdfBytes.set(trailerBytes, ptr); ptr += trailerBytes.length;
+
+  return new Blob([pdfBytes], { type: 'application/pdf' });
 }
 
 // 5. BACKGROUND REMOVAL FEATURE (Premium)

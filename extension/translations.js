@@ -194,7 +194,28 @@ const TRANSLATIONS = {
     batch_status_pending: "Pendente",
     batch_status_processing: "A processar",
     batch_status_completed: "Concluído",
-    batch_status_error: "Erro"
+    batch_status_error: "Erro",
+
+    // File Conversion Panel
+    nav_convert: "Conversão de Ficheiros",
+    header_convert_title: "Conversor de Ficheiros",
+    header_convert_sub: "Converta imagens de forma rápida e local",
+    convert_upload_title: "Carregar Imagem",
+    convert_label_type: "Tipo de Conversão",
+    btn_convert_now: "Converter Ficheiro",
+    btn_convert_download: "Descarregar Ficheiro",
+    convert_empty_preview: "Faça upload de um arquivo para ver a pré-visualização",
+    convert_png_to_jpg: "PNG para JPG",
+    convert_jpg_to_png: "JPG para PNG",
+    convert_png_to_webp: "PNG para WEBP",
+    convert_jpg_to_webp: "JPG para WEBP",
+    convert_png_to_html: "PNG para HTML",
+    convert_jpg_to_html: "JPG para HTML",
+    convert_png_to_pdf: "PNG para PDF",
+    convert_jpg_to_pdf: "JPG para PDF",
+    alert_converting: "A converter ficheiro...",
+    alert_convert_success: "Ficheiro convertido com sucesso!",
+    alert_convert_error: "Erro ao converter o ficheiro."
   },
 
   en: {
@@ -391,7 +412,28 @@ const TRANSLATIONS = {
     batch_status_pending: "Pending",
     batch_status_processing: "Processing",
     batch_status_completed: "Completed",
-    batch_status_error: "Error"
+    batch_status_error: "Error",
+
+    // File Conversion Panel
+    nav_convert: "File Conversion",
+    header_convert_title: "File Converter",
+    header_convert_sub: "Convert images quickly and locally",
+    convert_upload_title: "Upload Image",
+    convert_label_type: "Conversion Type",
+    btn_convert_now: "Convert File",
+    btn_convert_download: "Download File",
+    convert_empty_preview: "Upload a file to see preview",
+    convert_png_to_jpg: "PNG to JPG",
+    convert_jpg_to_png: "JPG to PNG",
+    convert_png_to_webp: "PNG to WEBP",
+    convert_jpg_to_webp: "JPG to WEBP",
+    convert_png_to_html: "PNG to HTML",
+    convert_jpg_to_html: "JPG to HTML",
+    convert_png_to_pdf: "PNG to PDF",
+    convert_jpg_to_pdf: "JPG to PDF",
+    alert_converting: "Converting file...",
+    alert_convert_success: "File converted successfully!",
+    alert_convert_error: "Error converting file."
   },
 
   fr: {
@@ -588,7 +630,28 @@ const TRANSLATIONS = {
     batch_status_pending: "En attente",
     batch_status_processing: "En cours",
     batch_status_completed: "Terminé",
-    batch_status_error: "Erreur"
+    batch_status_error: "Erreur",
+
+    // File Conversion Panel
+    nav_convert: "Convertisseur de Fichiers",
+    header_convert_title: "Convertisseur de Fichiers",
+    header_convert_sub: "Convertissez des images rapidement et localement",
+    convert_upload_title: "Télécharger l'Image",
+    convert_label_type: "Type de Conversion",
+    btn_convert_now: "Convertir le Fichier",
+    btn_convert_download: "Télécharger le Fichier",
+    convert_empty_preview: "Téléchargez un fichier pour voir l'aperçu",
+    convert_png_to_jpg: "PNG en JPG",
+    convert_jpg_to_png: "JPG en PNG",
+    convert_png_to_webp: "PNG en WEBP",
+    convert_jpg_to_webp: "JPG en WEBP",
+    convert_png_to_html: "PNG en HTML",
+    convert_jpg_to_html: "JPG en HTML",
+    convert_png_to_pdf: "PNG en PDF",
+    convert_jpg_to_pdf: "JPG en PDF",
+    alert_converting: "Conversion en cours...",
+    alert_convert_success: "Fichier converti avec succès!",
+    alert_convert_error: "Erreur lors de la conversion."
   },
 
   de: {
@@ -785,7 +848,28 @@ const TRANSLATIONS = {
     batch_status_pending: "Ausstehend",
     batch_status_processing: "Verarbeitung läuft",
     batch_status_completed: "Abgeschlossen",
-    batch_status_error: "Fehler"
+    batch_status_error: "Fehler",
+
+    // File Conversion Panel
+    nav_convert: "Dateikonvertierung",
+    header_convert_title: "Dateikonverter",
+    header_convert_sub: "Bilder schnell und lokal konvertieren",
+    convert_upload_title: "Bild hochladen",
+    convert_label_type: "Konvertierungstyp",
+    btn_convert_now: "Datei konvertieren",
+    btn_convert_download: "Datei herunterladen",
+    convert_empty_preview: "Laden Sie eine Datei hoch, um die Vorschau anzuzeigen",
+    convert_png_to_jpg: "PNG in JPG",
+    convert_jpg_to_png: "JPG in PNG",
+    convert_png_to_webp: "PNG in WEBP",
+    convert_jpg_to_webp: "JPG in WEBP",
+    convert_png_to_html: "PNG in HTML",
+    convert_jpg_to_html: "JPG in HTML",
+    convert_png_to_pdf: "PNG in PDF",
+    convert_jpg_to_pdf: "JPG in PDF",
+    alert_converting: "Datei wird konvertiert...",
+    alert_convert_success: "Datei erfolgreich konvertiert!",
+    alert_convert_error: "Fehler bei der Dateikonvertierung."
   },
 
   es: {
@@ -982,6 +1066,27 @@ const TRANSLATIONS = {
     batch_status_pending: "Pendiente",
     batch_status_processing: "Procesando",
     batch_status_completed: "Completado",
-    batch_status_error: "Error"
+    batch_status_error: "Error",
+
+    // File Conversion Panel
+    nav_convert: "Conversión de Archivos",
+    header_convert_title: "Convertidor de Archivos",
+    header_convert_sub: "Convierta imágenes de forma rápida y local",
+    convert_upload_title: "Cargar Imagen",
+    convert_label_type: "Tipo de Conversión",
+    btn_convert_now: "Convertir Archivo",
+    btn_convert_download: "Descargar Archivo",
+    convert_empty_preview: "Cargue un archivo para ver la vista previa",
+    convert_png_to_jpg: "PNG a JPG",
+    convert_jpg_to_png: "JPG a PNG",
+    convert_png_to_webp: "PNG a WEBP",
+    convert_jpg_to_webp: "JPG a WEBP",
+    convert_png_to_html: "PNG a HTML",
+    convert_jpg_to_html: "JPG a HTML",
+    convert_png_to_pdf: "PNG a PDF",
+    convert_jpg_to_pdf: "JPG a PDF",
+    alert_converting: "Convirtiendo archivo...",
+    alert_convert_success: "¡Archivo convertido con éxito!",
+    alert_convert_error: "Error al convertir el archivo."
   }
 };

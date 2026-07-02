@@ -28,6 +28,11 @@
           <span class="tooltip" data-i18n="nav_resize">Resize Image</span>
         </button>
 
+        <button class="nav-item" data-target="panel-convert" id="nav-convert">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="M7 23l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          <span class="tooltip" data-i18n="nav_convert">File Conversion</span>
+        </button>
+
         <button class="nav-item" data-target="panel-remove-bg" id="nav-remove-bg">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
           <span class="tooltip" data-i18n="nav_remove_bg">Remove BG</span>
@@ -192,6 +197,64 @@
             <div id="resize-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
               <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
               <p style="font-size: 12px;" data-i18n="resize_empty_preview">Upload an image to see preview</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: File Conversion (Free) -->
+      <div class="content-panel" id="panel-convert">
+        <div class="editor-cols">
+          <div class="sidebar-controls">
+            
+            <div class="control-group">
+              <span class="control-label" data-i18n="convert_upload_title">Upload Image</span>
+              <div class="dropzone" id="convert-dropzone">
+                <svg class="dropzone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <div class="dropzone-text">
+                  <h4 data-i18n="resize_dropzone_h4">Drag & drop</h4>
+                  <p data-i18n="resize_dropzone_p">PNG, JPG or WEBP</p>
+                </div>
+                <input type="file" id="convert-file-input" accept="image/png, image/jpeg, image/jpg" style="display: none;">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label" data-i18n="convert_label_type">Conversion Type</span>
+              <select id="convert-type-select">
+                <option value="png-to-jpg" data-i18n="convert_png_to_jpg">PNG to JPG</option>
+                <option value="jpg-to-png" data-i18n="convert_jpg_to_png">JPG to PNG</option>
+                <option value="png-to-webp" data-i18n="convert_png_to_webp">PNG to WEBP</option>
+                <option value="jpg-to-webp" data-i18n="convert_jpg_to_webp">JPG to WEBP</option>
+                <option value="png-to-html" data-i18n="convert_png_to_html">PNG to HTML</option>
+                <option value="jpg-to-html" data-i18n="convert_jpg_to_html">JPG to HTML</option>
+                <option value="png-to-pdf" data-i18n="convert_png_to_pdf">PNG to PDF</option>
+                <option value="jpg-to-pdf" data-i18n="convert_jpg_to_pdf">JPG to PDF</option>
+              </select>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:auto;">
+              <button class="btn btn-primary btn-block" id="btn-convert-now" data-i18n="btn_convert_now">
+                Convert File
+              </button>
+              <button class="btn btn-gradient-premium btn-block" id="btn-convert-download" style="display: none;" data-i18n="btn_convert_download">
+                Download File
+              </button>
+            </div>
+          </div>
+
+          <div class="preview-window">
+            <div class="preview-img-container" id="convert-preview-box" style="display: none; align-items: center; justify-content: center; width: 100%; height: 100%;">
+              <img class="preview-img" id="convert-preview-img" style="display:none; max-width:100%; max-height:100%; object-fit:contain;">
+              <div id="convert-preview-doc" style="display:none; text-align:center; color:var(--color-text-primary); padding:20px;">
+                <svg id="convert-doc-icon" width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom:12px; color:var(--color-primary);"></svg>
+                <h4 id="convert-doc-name" style="font-size:14px; font-weight:600;">document.pdf</h4>
+                <p id="convert-doc-info" style="font-size:11px; color:var(--color-text-secondary); margin-top:4px;">120 KB</p>
+              </div>
+            </div>
+            <div id="convert-empty-preview" style="color: var(--color-text-secondary); text-align: center;">
+              <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 8px;"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+              <p style="font-size: 12px;" data-i18n="convert_empty_preview">Upload a file to see preview</p>
             </div>
           </div>
         </div>
